@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCurrency } from "@/hooks/useCurrency";
 import { Calendar, MapPin, Loader2, Minus, Plus, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -25,6 +26,7 @@ const TYPES = [
 function EventDetail() {
   const { id } = Route.useParams();
   const { user } = useAuth();
+  const { format: fmt } = useCurrency();
   const nav = useNavigate();
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -142,7 +144,7 @@ function EventDetail() {
                           <div className="font-semibold">{t.label}</div>
                           <div className="text-xs text-muted-foreground">{t.desc}</div>
                         </div>
-                        <div className="font-display text-lg">${price.toFixed(0)}</div>
+                        <div className="font-display text-lg">{fmt(price, { decimals: 0 })}</div>
                       </div>
                       <div className="mt-2 flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">{available ? `${max} max` : "Unavailable"}</span>
@@ -159,7 +161,7 @@ function EventDetail() {
 
               <div className="mt-5 pt-5 border-t border-border flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Total</span>
-                <span className="font-display text-2xl font-bold">${total.toFixed(2)}</span>
+                <span className="font-display text-2xl font-bold">{fmt(total)}</span>
               </div>
 
               <Button className="w-full mt-4 glow-primary h-11" disabled={submitting || totalQty === 0} onClick={startCheckout}>
@@ -194,7 +196,7 @@ function EventDetail() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setContactOpen(false)} disabled={submitting}>Cancel</Button>
             <Button onClick={confirmCheckout} disabled={submitting} className="glow-primary">
-              {submitting ? <Loader2 className="animate-spin h-4 w-4" /> : `Pay $${total.toFixed(2)}`}
+              {submitting ? <Loader2 className="animate-spin h-4 w-4" /> : `Pay ${fmt(total)}`}
             </Button>
           </DialogFooter>
         </DialogContent>
