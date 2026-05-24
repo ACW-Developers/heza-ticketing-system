@@ -113,18 +113,25 @@ function Auth() {
 
         <div className="flex-1 flex items-center justify-center px-6 pb-12">
           <div className="w-full max-w-md">
-            {/* Logo above the form */}
-            <div className="flex flex-col items-center mb-6">
-              <div className="h-16 w-16 rounded-2xl bg-foreground shadow-lg flex items-center justify-center mb-3 ring-1 ring-border">
-                <img src={logo} alt="Smarticketing" className="h-10 w-10 rounded-lg" />
-              </div>
-              <span className="font-display text-2xl font-bold tracking-tight">
-                Smarticketing<span className="text-primary">.</span>
-              </span>
-            </div>
+            {/* Elegant green-bordered card wrapping logo + form */}
+            <div className="relative">
+              {/* Soft outer glow */}
+              <div
+                aria-hidden
+                className="absolute -inset-px rounded-[1.75rem] bg-gradient-to-br from-primary/40 via-accent/30 to-primary/40 blur-md opacity-60"
+              />
+              <div className="relative rounded-[1.5rem] border-2 border-primary/40 bg-card shadow-2xl px-6 pt-8 pb-7 sm:px-9 sm:pt-10 sm:pb-9">
+                {/* Logo inside the card */}
+                <div className="flex flex-col items-center mb-7">
+                  <div className="h-16 w-16 rounded-2xl bg-foreground shadow-lg flex items-center justify-center mb-3 ring-2 ring-primary/40">
+                    <img src={logo} alt="Smarticketing" className="h-10 w-10 rounded-lg" />
+                  </div>
+                  <span className="font-display text-2xl font-bold tracking-tight">
+                    Smarticketing<span className="text-primary">.</span>
+                  </span>
+                </div>
 
-            <div className="rounded-2xl border border-border bg-card shadow-xl p-6 sm:p-8">
-              <div className="mb-6 text-center">
+                <div className="mb-6 text-center">
                 <h1 className="font-display text-2xl font-bold tracking-tight">Welcome back</h1>
                 <p className="mt-1.5 text-sm text-muted-foreground">Sign in or create your account to book tickets.</p>
               </div>
@@ -157,6 +164,7 @@ function Auth() {
                   </form>
                 </TabsContent>
               </Tabs>
+              </div>
             </div>
 
             <p className="mt-6 text-center text-xs text-muted-foreground">
@@ -174,8 +182,13 @@ function FieldIcon({ icon: Icon, label, name, ...props }: any) {
     <div className="space-y-1.5">
       <Label htmlFor={name} className="text-xs font-medium text-muted-foreground">{label}</Label>
       <div className="relative">
-        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input id={name} name={name} {...props} className="pl-10 h-11" />
+        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/70" />
+        <Input
+          id={name}
+          name={name}
+          {...props}
+          className="pl-10 h-11 border-2 border-primary/30 bg-background/60 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30 transition-colors"
+        />
       </div>
     </div>
   );
@@ -187,19 +200,19 @@ function PasswordField({ label, name, ...props }: any) {
     <div className="space-y-1.5">
       <Label htmlFor={name} className="text-xs font-medium text-muted-foreground">{label}</Label>
       <div className="relative">
-        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/70" />
         <Input
           id={name}
           name={name}
           type={show ? "text" : "password"}
           {...props}
-          className="pl-10 pr-10 h-11"
+          className="pl-10 pr-10 h-11 border-2 border-primary/30 bg-background/60 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30 transition-colors"
         />
         <button
           type="button"
           onClick={() => setShow((v) => !v)}
           aria-label={show ? "Hide password" : "Show password"}
-          className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-md text-primary/70 hover:text-primary hover:bg-primary/10 transition-colors"
         >
           {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </button>
