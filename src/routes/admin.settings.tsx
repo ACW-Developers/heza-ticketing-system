@@ -1,12 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTheme } from "@/hooks/useTheme";
+import { useCurrency, CURRENCIES } from "@/hooks/useCurrency";
 import { Button } from "@/components/ui/button";
-import { Settings as SettingsIcon, Sun, Moon, Bell, Shield, CreditCard } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Settings as SettingsIcon, Sun, Moon, Bell, Shield, CreditCard, Coins } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/settings")({ component: Settings });
 
 function Settings() {
   const { theme, toggle } = useTheme();
+  const { currency, setCurrency, format } = useCurrency();
 
   return (
     <div className="max-w-3xl space-y-6">
@@ -19,6 +23,28 @@ function Settings() {
         <Button variant="outline" onClick={toggle}>
           Switch to {theme === "light" ? "dark" : "light"}
         </Button>
+      </Row>
+
+      <Row icon={Coins} title="Default currency" desc={`Prices display as ${format(1234.5)}`}>
+        <Select
+          value={currency}
+          onValueChange={(v) => {
+            setCurrency(v as any);
+            toast.success("Currency updated");
+          }}
+        >
+          <SelectTrigger className="w-[220px] border-primary/40 focus:ring-primary">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {CURRENCIES.map((c) => (
+              <SelectItem key={c.code} value={c.code}>
+                <span className="font-mono text-xs text-muted-foreground mr-2">{c.symbol}</span>
+                {c.label} ({c.code})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </Row>
 
       <Row icon={Bell} title="Notifications" desc="Email and in-app alerts for new orders">

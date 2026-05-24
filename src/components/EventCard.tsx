@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Calendar, MapPin } from "lucide-react";
 import { format } from "date-fns";
+import { useCurrency } from "@/hooks/useCurrency";
 
 export interface EventCardData {
   id: string;
@@ -13,6 +14,7 @@ export interface EventCardData {
 }
 
 export function EventCard({ event }: { event: EventCardData }) {
+  const { format: fmt } = useCurrency();
   return (
     <Link
       to="/events/$id"
@@ -32,7 +34,7 @@ export function EventCard({ event }: { event: EventCardData }) {
           </div>
         )}
         <div className="absolute top-3 right-3 rounded-full bg-background/80 backdrop-blur px-3 py-1 text-xs font-semibold">
-          From ${Number(event.price_regular).toFixed(0)}
+          From {fmt(Number(event.price_regular), { decimals: 0 })}
         </div>
       </div>
       <div className="p-5">
