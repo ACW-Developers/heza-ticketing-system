@@ -84,8 +84,8 @@ function Auth() {
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/75 via-black/40 to-transparent" />
         <div className="relative h-full flex flex-col justify-between p-12 text-white">
           <div className="flex items-center gap-2.5">
-            <div className="h-10 w-10 rounded-xl bg-black/70 backdrop-blur ring-1 ring-white/20 flex items-center justify-center shadow-lg">
-              <img src={logo} alt="" className="h-7 w-7 rounded-md" />
+            <div className="h-10 w-10 rounded-xl bg-white/90 backdrop-blur ring-1 ring-white/40 flex items-center justify-center shadow-lg">
+              <img src={logo} alt="" className="h-8 w-8 rounded-md" />
             </div>
             <span className="font-display text-xl font-bold drop-shadow-lg">Smarticketing</span>
           </div>
@@ -94,7 +94,7 @@ function Auth() {
               <Sparkles className="h-3.5 w-3.5" /> Trusted by thousands of event-goers
             </div>
             <h2 className="font-display text-4xl xl:text-5xl font-bold leading-[1.05] drop-shadow-2xl">
-              Your next unforgettable night is one tap away.
+              Your next unforgettable event is one tap away.
             </h2>
             <p className="text-white/95 text-base leading-relaxed drop-shadow-lg">
               Discover events, book in seconds with secure checkout, and walk in with instant QR tickets.
@@ -123,8 +123,8 @@ function Auth() {
               <div className="relative rounded-[1.5rem] border-2 border-primary/40 bg-card shadow-2xl px-6 pt-8 pb-7 sm:px-9 sm:pt-10 sm:pb-9">
                 {/* Logo inside the card */}
                 <div className="flex flex-col items-center mb-7">
-                  <div className="h-16 w-16 rounded-2xl bg-foreground shadow-lg flex items-center justify-center mb-3 ring-2 ring-primary/40">
-                    <img src={logo} alt="Smarticketing" className="h-10 w-10 rounded-lg" />
+                  <div className="h-16 w-16 rounded-2xl bg-primary/15 shadow-lg flex items-center justify-center mb-3 ring-2 ring-primary/40">
+                    <img src={logo} alt="Smarticketing" className="h-12 w-12 rounded-lg" />
                   </div>
                   <span className="font-display text-2xl font-bold tracking-tight">
                     Smarticketing<span className="text-primary">.</span>
