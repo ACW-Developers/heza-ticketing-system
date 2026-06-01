@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Calendar, MapPin, Loader2 } from "lucide-react";
+import { Calendar, MapPin, Loader2, Download, Ticket as TicketIcon } from "lucide-react";
 import { format } from "date-fns";
 import QRCode from "qrcode";
+import html2canvas from "html2canvas";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/my-tickets")({
   component: MyTickets,
@@ -18,6 +20,7 @@ function MyTickets() {
   const [rows, setRows] = useState<any[]>([]);
   const [busy, setBusy] = useState(true);
   const [qrs, setQrs] = useState<Record<string, string>>({});
+  const ticketRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     if (!loading && !user) nav({ to: "/auth" });
@@ -41,6 +44,16 @@ function MyTickets() {
     })();
   }, [user]);
 
+  async function downloadTicket(t: any) {
+    const el = ticketRefs.current[t.id];
+    if (!el) return;
+    const canvas = await html2canvas(el, { backgroundColor: "#ffffff", scale: 2, useCORS: true });
+    const link = document.createElement("a");
+    link.download = `ticket-${t.ticket_number}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }
+
   if (busy) return <Layout><div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div></Layout>;
 
   return (
@@ -53,69 +66,84 @@ function MyTickets() {
             No tickets yet. <Link to="/events" className="text-primary">Browse events</Link>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 gap-5">
+          <div className="grid sm:grid-cols-2 gap-6">
             {rows.map((t) => (
-              <div
-                key={t.id}
-                className="group relative rounded-2xl overflow-hidden flex border border-border/60 shadow-lg hover:shadow-2xl hover:-translate-y-0.5 transition-all"
-              >
-                {/* Background: event poster or gradient */}
-                <div className="absolute inset-0">
-                  {t.events?.poster_url ? (
-                    <img
-                      src={t.events.poster_url}
-                      alt=""
-                      className="h-full w-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-gradient-to-br from-primary/60 via-accent/40 to-primary/30" />
-                  )}
-                </div>
-                {/* Dark overlay + mesh pattern for legibility */}
-                <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/85 to-background/70" />
+              <div key={t.id} className="space-y-2">
                 <div
-                  className="absolute inset-0 opacity-30 mix-blend-overlay"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle at 20% 20%, hsl(var(--primary)/0.6) 0px, transparent 40%), radial-gradient(circle at 80% 80%, hsl(var(--accent)/0.5) 0px, transparent 45%)",
-                  }}
-                />
+                  ref={(el) => { ticketRefs.current[t.id] = el; }}
+                  className="relative flex rounded-2xl overflow-hidden shadow-xl bg-white text-neutral-900"
+                  style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+                >
+                  {/* Left accent bar */}
+                  <div className="w-2 bg-gradient-to-b from-primary via-accent to-primary" />
 
-                {/* Content */}
-                <div className="relative flex-1 p-5">
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 ring-1 ring-primary/30 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-primary font-bold">
-                    {t.ticket_type}
-                  </div>
-                  <h3 className="font-display text-lg font-bold mt-2 line-clamp-2 drop-shadow-sm">
-                    {t.events?.title}
-                  </h3>
-                  <div className="mt-3 space-y-1 text-xs text-foreground/80">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="h-3.5 w-3.5 text-primary" />
-                      {t.events?.event_date && format(new Date(t.events.event_date), "MMM d, h:mm a")}
+                  {/* Main body */}
+                  <div className="flex-1 p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-neutral-500 font-semibold">
+                        <TicketIcon className="h-3.5 w-3.5" />
+                        Admit One
+                      </div>
+                      <span className="rounded-full bg-neutral-900 text-white px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-bold">
+                        {t.ticket_type}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5 text-primary" />
-                      {t.events?.venue}
+
+                    <h3 className="font-display text-2xl font-extrabold mt-3 leading-tight text-neutral-900">
+                      {t.events?.title}
+                    </h3>
+
+                    <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Date</div>
+                        <div className="mt-1 flex items-center gap-1.5 text-neutral-800 font-medium">
+                          <Calendar className="h-3.5 w-3.5 text-neutral-500" />
+                          {t.events?.event_date && format(new Date(t.events.event_date), "MMM d, yyyy · h:mm a")}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Venue</div>
+                        <div className="mt-1 flex items-center gap-1.5 text-neutral-800 font-medium">
+                          <MapPin className="h-3.5 w-3.5 text-neutral-500" />
+                          {t.events?.venue}
+                        </div>
+                      </div>
+                      {t.attendee_name && (
+                        <div className="col-span-2">
+                          <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Attendee</div>
+                          <div className="mt-1 text-neutral-800 font-medium">{t.attendee_name}</div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-5 pt-3 border-t border-dashed border-neutral-200">
+                      <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Ticket No.</div>
+                      <div className="mt-0.5 font-mono text-[11px] text-neutral-700 break-all">{t.ticket_number}</div>
                     </div>
                   </div>
-                  <div className="mt-3 text-[10px] font-mono break-all text-foreground/60">
-                    {t.ticket_number}
+
+                  {/* Perforated divider */}
+                  <div className="relative flex flex-col items-center justify-center px-1">
+                    <div className="absolute -top-2 h-4 w-4 rounded-full bg-background" />
+                    <div className="h-full w-px border-l border-dashed border-neutral-300" />
+                    <div className="absolute -bottom-2 h-4 w-4 rounded-full bg-background" />
+                  </div>
+
+                  {/* QR stub */}
+                  <div className="w-36 bg-neutral-50 p-3 flex flex-col items-center justify-center">
+                    {qrs[t.id] && <img src={qrs[t.id]} alt="QR" className="w-full" />}
+                    <span className="mt-1.5 text-[9px] uppercase tracking-[0.15em] text-neutral-500 font-semibold">Scan at entry</span>
                   </div>
                 </div>
 
-                {/* Perforated divider */}
-                <div className="relative w-px my-4 bg-border [mask-image:repeating-linear-gradient(to_bottom,black_0_6px,transparent_6px_12px)]" />
-
-                {/* QR stub */}
-                <div className="relative w-32 bg-white/95 backdrop-blur p-2 flex flex-col items-center justify-center">
-                  {qrs[t.id] && <img src={qrs[t.id]} alt="QR" className="w-full" />}
-                  <span className="mt-1 text-[9px] uppercase tracking-wider text-black/60 font-semibold">Scan at entry</span>
-                </div>
-
-                {/* Notches */}
-                <div className="absolute left-[calc(100%-8.5rem)] -translate-x-1/2 -top-2 h-4 w-4 rounded-full bg-background border border-border/60" />
-                <div className="absolute left-[calc(100%-8.5rem)] -translate-x-1/2 -bottom-2 h-4 w-4 rounded-full bg-background border border-border/60" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => downloadTicket(t)}
+                >
+                  <Download className="h-4 w-4 mr-2" /> Download ticket
+                </Button>
               </div>
             ))}
           </div>
