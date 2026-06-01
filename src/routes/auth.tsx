@@ -28,13 +28,15 @@ const signUpSchema = z.object({
 
 function Auth() {
   const nav = useNavigate();
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading, roleResolved } = useAuth();
   const { theme, toggle } = useTheme();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && user) nav({ to: isAdmin ? "/admin" : "/events" });
-  }, [user, isAdmin, authLoading, nav]);
+    if (!authLoading && user && roleResolved) {
+      nav({ to: isAdmin ? "/admin" : "/events" });
+    }
+  }, [user, isAdmin, authLoading, roleResolved, nav]);
 
   async function handleSignIn(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
