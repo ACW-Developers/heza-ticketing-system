@@ -1,0 +1,32 @@
+# Netlify is used purely as a proxy/CDN in front of the Cloudflare Worker
+# that hosts this TanStack Start app. The actual app (SSR + API routes for
+# /api/checkout and /api/verify) runs at smarticketing.acwdevs.workers.dev.
+#
+# Why a proxy instead of a native Netlify build:
+# The Lovable TanStack Start template builds for Cloudflare Workers via
+# @lovable.dev/vite-tanstack-config + @cloudflare/vite-plugin. Retargeting
+# to Netlify Functions requires ejecting from that wrapper, which is a full
+# rewrite. Proxying keeps a single source of truth (the Worker) while
+# letting you serve the site from a Netlify domain.
+#
+# Setup steps in the Netlify UI:
+#   1. New site -> Import from Git (or "Deploy manually" with this repo).
+#   2. Build command: leave EMPTY (no build needed for a pure proxy site).
+#   3. Publish directory: "public" (any directory works; it just needs to exist).
+#   4. After first deploy, all requests are forwarded to the Worker below.
+#
+# To point requests at a different backend, change the `to = "..."` URLs.
+
+[build]
+  publish = "public"
+  command = "mkdir -p public && echo 'Proxied to Cloudflare Worker' > public/index.html"
+
+# Forward every request (HTML pages, /api/* server routes, static assets)
+# to the Cloudflare Worker. status = 200 makes Netlify return the proxied
+# response directly instead of issuing a 301/302 to the user's browser,
+# so the URL bar stays on the Netlify domain.
+[[redirects]]
+  from = "/*"
+  to = "https://smarticketing.acwdevs.workers.dev/:splat"
+  status = 200
+  force = true
