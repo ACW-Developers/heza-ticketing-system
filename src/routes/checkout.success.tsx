@@ -20,20 +20,13 @@ function CheckoutSuccess() {
     if (!session_id) { setState("error"); return; }
     (async () => {
       try {
-        const { data: sess } = await supabase.auth.getSession();
-        const token = sess.session?.access_token;
-        const res = await fetch("/api/verify", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ sessionId: session_id }),
+        const { data, error } = await supabase.functions.invoke("verify", {
+          body: { sessionId: session_id },
         });
-        if (!res.ok) throw new Error(await res.text());
-        const json = await res.json();
-        if (json.status === "paid") {
-          setTickets(json.tickets ?? []);
+        if (error) throw new Error(error.message);
+        if (data?.error) throw new Error(data.error);
+        if (data?.status === "paid") {
+          setTickets(data.tickets ?? []);
           setState("paid");
         } else setState("pending");
       } catch (e: any) {
