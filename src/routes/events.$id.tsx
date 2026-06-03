@@ -80,22 +80,12 @@ function EventDetail() {
     setSubmitting(true);
     try {
       const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({ type: t.key, quantity: qty[t.key] }));
-      const { data: sess } = await supabase.auth.getSession();
-      const token = sess.session?.access_token;
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ eventId: id, origin: window.location.origin, items, attendee: contact }),
+      const { data, error } = await supabase.functions.invoke("checkout", {
+        body: { eventId: id, origin: window.location.origin, items, attendee: contact },
       });
-      if (!res.ok) {
-        const msg = await res.text();
-        throw new Error(msg || "Checkout failed");
-      }
-      const json = await res.json();
-      if (json.url) window.location.href = json.url;
+      if (error) throw new Error(error.message || "Checkout failed");
+      if (data?.error) throw new Error(data.error);
+      if (data?.url) window.location.href = data.url;
     } catch (e: any) {
       toast.error(e?.message ?? "Checkout failed");
       setSubmitting(false);

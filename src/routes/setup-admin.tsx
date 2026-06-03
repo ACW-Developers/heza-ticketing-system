@@ -1,11 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { checkAdminExists, createInitialAdmin } from "@/lib/setup-admin.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
@@ -16,28 +15,34 @@ export const Route = createFileRoute("/setup-admin")({
 
 function SetupAdmin() {
   const nav = useNavigate();
-  const check = useServerFn(checkAdminExists);
-  const create = useServerFn(createInitialAdmin);
   const [state, setState] = useState<"checking" | "blocked" | "ready">("checking");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    check().then((r) => setState(r.hasAdmin ? "blocked" : "ready")).catch(() => setState("blocked"));
-  }, [check]);
+    supabase.functions
+      .invoke("setup-admin", { method: "GET" })
+      .then(({ data, error }) => {
+        if (error || !data) return setState("blocked");
+        setState(data.hasAdmin ? "blocked" : "ready");
+      })
+      .catch(() => setState("blocked"));
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     setSubmitting(true);
     try {
-      await create({
-        data: {
+      const { data, error } = await supabase.functions.invoke("setup-admin", {
+        body: {
           full_name: String(fd.get("full_name") ?? ""),
           phone: String(fd.get("phone") ?? ""),
           email: String(fd.get("email") ?? ""),
           password: String(fd.get("password") ?? ""),
         },
       });
+      if (error) throw new Error(error.message);
+      if (data?.error) throw new Error(data.error);
       toast.success("Admin created. You can sign in now.");
       nav({ to: "/auth" });
     } catch (err: any) {
