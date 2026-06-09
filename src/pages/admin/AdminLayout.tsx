@@ -1,4 +1,4 @@
-import { useNavigate } , Outlet } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
