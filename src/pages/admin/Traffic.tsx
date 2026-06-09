@@ -5,8 +5,6 @@ import { Loader2, BarChart3 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
 import { format, subDays } from "date-fns";
 
-export const Route = createFileRoute("/admin/traffic")({ component: Traffic });
-
 function Traffic() {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

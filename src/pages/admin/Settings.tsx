@@ -6,8 +6,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Settings as SettingsIcon, Sun, Moon, Bell, Shield, CreditCard, Coins } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/settings")({ component: Settings });
-
 function Settings() {
   const { theme, toggle } = useTheme();
   const { currency, setCurrency, format } = useCurrency();

@@ -11,8 +11,6 @@ import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/events")({ component: AdminEvents });
-
 const empty = {
   id: "", title: "", description: "", event_date: "", venue: "", poster_url: "",
   price_children: 0, price_regular: 0, price_vip: 0, price_vvip: 0,

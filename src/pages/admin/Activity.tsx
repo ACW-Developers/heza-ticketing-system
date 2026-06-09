@@ -4,8 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Activity, UserPlus, Ticket, CreditCard } from "lucide-react";
 import { format } from "date-fns";
 
-export const Route = createFileRoute("/admin/activity")({ component: ActivityLog });
-
 function ActivityLog() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

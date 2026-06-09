@@ -8,8 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Loader2, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/profile")({ component: Profile });
-
 function Profile() {
   const { user } = useAuth();
   const [form, setForm] = useState({ full_name: "", phone: "", email: "" });

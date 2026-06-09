@@ -6,8 +6,6 @@ import { Calendar, DollarSign, Ticket, Users, Loader2, TrendingUp } from "lucide
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, LineChart, Line } from "recharts";
 import { format, subDays } from "date-fns";
 
-export const Route = createFileRoute("/admin/")({ component: Dashboard });
-
 function Stat({ icon: Icon, label, value, hint }: any) {
   return (
     <div className="surface-card rounded-xl p-5">

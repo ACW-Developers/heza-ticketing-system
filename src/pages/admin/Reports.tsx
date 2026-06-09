@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Loader2, FileText, Download } from "lucide-react";
 import { format } from "date-fns";
 
-export const Route = createFileRoute("/admin/reports")({ component: Reports });
-
 function Reports() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
