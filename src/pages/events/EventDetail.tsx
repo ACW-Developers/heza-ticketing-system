@@ -190,3 +190,5 @@ function EventDetail() {
     </Layout>
   );
 }
+
+export default EventDetail;

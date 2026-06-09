@@ -90,3 +90,5 @@ function Attendees() {
     </div>
   );
 }
+
+export default Attendees;

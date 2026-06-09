@@ -59,3 +59,5 @@ function EventsPage() {
     </Layout>
   );
 }
+
+export default EventsPage;

@@ -81,3 +81,5 @@ function Card({ icon: Icon, label, value }: any) {
     </div>
   );
 }
+
+export default AdminPayments;

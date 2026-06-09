@@ -7,7 +7,8 @@ import { CheckCircle2, Loader2, Ticket } from "lucide-react";
 import { toast } from "sonner";
 
 function CheckoutSuccess() {
-  const { session_id } = useSearch({ from: "/checkout/success" });
+  const [sp] = useSearchParams();
+  const session_id = sp.get("session_id") ?? "";
   const [state, setState] = useState<"verifying" | "paid" | "pending" | "error">("verifying");
   const [tickets, setTickets] = useState<any[]>([]);
 
@@ -61,3 +62,5 @@ function CheckoutSuccess() {
     </Layout>
   );
 }
+
+export default CheckoutSuccess;

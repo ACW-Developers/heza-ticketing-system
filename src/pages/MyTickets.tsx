@@ -147,3 +147,5 @@ function MyTickets() {
     </Layout>
   );
 }
+
+export default MyTickets;

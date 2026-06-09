@@ -78,3 +78,5 @@ function Row({ icon: Icon, title, desc, children }: any) {
     </div>
   );
 }
+
+export default Settings;

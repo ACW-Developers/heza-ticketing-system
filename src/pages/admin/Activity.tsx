@@ -56,3 +56,5 @@ function ActivityLog() {
     </div>
   );
 }
+
+export default ActivityLog;

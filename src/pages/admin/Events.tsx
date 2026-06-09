@@ -155,3 +155,5 @@ function AdminEvents() {
     </div>
   );
 }
+
+export default AdminEvents;

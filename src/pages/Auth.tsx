@@ -217,3 +217,5 @@ function PasswordField({ label, name, ...props }: any) {
     </div>
   );
 }
+
+export default Auth;

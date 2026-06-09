@@ -99,3 +99,5 @@ function SetupAdmin() {
     </Layout>
   );
 }
+
+export default SetupAdmin;

@@ -67,3 +67,5 @@ function Traffic() {
     </div>
   );
 }
+
+export default Traffic;
