@@ -29,7 +29,7 @@ function Auth() {
 
   useEffect(() => {
     if (!authLoading && user && roleResolved) {
-      nav({ to: isAdmin ? "/admin" : "/events" });
+      nav(isAdmin ? "/admin" : "/events", { replace: true });
     }
   }, [user, isAdmin, authLoading, roleResolved, nav]);
 
