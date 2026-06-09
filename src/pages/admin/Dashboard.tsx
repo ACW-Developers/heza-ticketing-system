@@ -1,12 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrency } from "@/hooks/useCurrency";
 import { Calendar, DollarSign, Ticket, Users, Loader2, TrendingUp } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, LineChart, Line } from "recharts";
 import { format, subDays } from "date-fns";
-
-export const Route = createFileRoute("/admin/")({ component: Dashboard });
 
 function Stat({ icon: Icon, label, value, hint }: any) {
   return (
@@ -116,3 +114,5 @@ function Dashboard() {
     </div>
   );
 }
+
+export default Dashboard;

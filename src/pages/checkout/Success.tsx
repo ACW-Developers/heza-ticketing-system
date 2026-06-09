@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
+import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -6,13 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, Loader2, Ticket } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/checkout/success")({
-  component: CheckoutSuccess,
-  validateSearch: (s: Record<string, unknown>) => ({ session_id: (s.session_id as string) ?? "" }),
-});
-
 function CheckoutSuccess() {
-  const { session_id } = useSearch({ from: "/checkout/success" });
+  const [sp] = useSearchParams();
+  const session_id = sp.get("session_id") ?? "";
   const [state, setState] = useState<"verifying" | "paid" | "pending" | "error">("verifying");
   const [tickets, setTickets] = useState<any[]>([]);
 
@@ -66,3 +62,5 @@ function CheckoutSuccess() {
     </Layout>
   );
 }
+
+export default CheckoutSuccess;

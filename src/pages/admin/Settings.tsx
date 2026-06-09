@@ -1,12 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useTheme } from "@/hooks/useTheme";
 import { useCurrency, CURRENCIES } from "@/hooks/useCurrency";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Settings as SettingsIcon, Sun, Moon, Bell, Shield, CreditCard, Coins } from "lucide-react";
 import { toast } from "sonner";
-
-export const Route = createFileRoute("/admin/settings")({ component: Settings });
 
 function Settings() {
   const { theme, toggle } = useTheme();
@@ -78,3 +76,5 @@ function Row({ icon: Icon, title, desc, children }: any) {
     </div>
   );
 }
+
+export default Settings;

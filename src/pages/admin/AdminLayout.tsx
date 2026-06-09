@@ -1,14 +1,9 @@
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import { useNavigate, Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AdminSidebar, AdminTopbar } from "@/components/AdminSidebar";
-
-export const Route = createFileRoute("/admin")({
-  component: AdminLayout,
-  head: () => ({ meta: [{ title: "Admin - Smarticketing" }] }),
-});
 
 function AdminLayout() {
   const { user, isAdmin, loading } = useAuth();
@@ -16,8 +11,8 @@ function AdminLayout() {
 
   useEffect(() => {
     if (loading) return;
-    if (!user) nav({ to: "/auth" });
-    else if (!isAdmin) nav({ to: "/events" });
+    if (!user) nav("/auth");
+    else if (!isAdmin) nav("/events");
   }, [loading, user, isAdmin, nav]);
 
   if (loading || !user || !isAdmin) {
@@ -42,3 +37,5 @@ function AdminLayout() {
     </SidebarProvider>
   );
 }
+
+export default AdminLayout;

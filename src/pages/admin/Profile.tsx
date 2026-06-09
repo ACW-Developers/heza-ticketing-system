@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
-
-export const Route = createFileRoute("/admin/profile")({ component: Profile });
 
 function Profile() {
   const { user } = useAuth();
@@ -80,3 +78,5 @@ function Profile() {
     </div>
   );
 }
+
+export default Profile;

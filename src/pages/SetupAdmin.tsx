@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -7,11 +7,6 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
-
-export const Route = createFileRoute("/setup-admin")({
-  component: SetupAdmin,
-  head: () => ({ meta: [{ title: "Setup Admin - Smarticketing" }, { name: "robots", content: "noindex,nofollow" }] }),
-});
 
 function SetupAdmin() {
   const nav = useNavigate();
@@ -44,7 +39,7 @@ function SetupAdmin() {
       if (error) throw new Error(error.message);
       if (data?.error) throw new Error(data.error);
       toast.success("Admin created. You can sign in now.");
-      nav({ to: "/auth" });
+      nav("/auth");
     } catch (err: any) {
       toast.error(err?.message ?? "Failed to create admin");
     } finally {
@@ -104,3 +99,5 @@ function SetupAdmin() {
     </Layout>
   );
 }
+
+export default SetupAdmin;

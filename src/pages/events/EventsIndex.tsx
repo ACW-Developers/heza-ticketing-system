@@ -1,15 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { EventCard } from "@/components/EventCard";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Loader2 } from "lucide-react";
-
-export const Route = createFileRoute("/events/")({
-  component: EventsPage,
-  head: () => ({ meta: [{ title: "Events - Smarticketing" }, { name: "description", content: "Browse upcoming events and book tickets instantly." }] }),
-});
 
 function EventsPage() {
   const [events, setEvents] = useState<any[]>([]);
@@ -64,3 +59,5 @@ function EventsPage() {
     </Layout>
   );
 }
+
+export default EventsPage;

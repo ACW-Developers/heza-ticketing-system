@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -12,10 +12,6 @@ import { Calendar, MapPin, Loader2, Minus, Plus, ArrowLeft } from "lucide-react"
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/events/$id")({
-  component: EventDetail,
-});
-
 const TYPES = [
   { key: "children", label: "Children", desc: "Ages 12 and under" },
   { key: "regular", label: "Regular", desc: "General admission" },
@@ -24,7 +20,7 @@ const TYPES = [
 ] as const;
 
 function EventDetail() {
-  const { id } = Route.useParams();
+  const { id } = useParams() as Record<string,string>;
   const { user } = useAuth();
   const { format: fmt } = useCurrency();
   const nav = useNavigate();
@@ -68,7 +64,7 @@ function EventDetail() {
   }
 
   function startCheckout() {
-    if (!user) { nav({ to: "/auth" }); return; }
+    if (!user) { nav("/auth"); return; }
     if (totalQty === 0) return toast.error("Select at least one ticket");
     setContactOpen(true);
   }
@@ -194,3 +190,5 @@ function EventDetail() {
     </Layout>
   );
 }
+
+export default EventDetail;

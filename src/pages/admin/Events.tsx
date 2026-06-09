@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,8 +10,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
-
-export const Route = createFileRoute("/admin/events")({ component: AdminEvents });
 
 const empty = {
   id: "", title: "", description: "", event_date: "", venue: "", poster_url: "",
@@ -155,3 +153,5 @@ function AdminEvents() {
     </div>
   );
 }
+
+export default AdminEvents;

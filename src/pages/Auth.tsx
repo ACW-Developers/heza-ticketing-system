@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,11 +12,6 @@ import { Loader2, Mail, Lock, User as UserIcon, Phone, Sun, Moon, Sparkles, Eye,
 import { z } from "zod";
 import authHero from "@/assets/auth-hero.jpg";
 import logo from "@/assets/logo.png";
-
-export const Route = createFileRoute("/auth")({
-  component: Auth,
-  head: () => ({ meta: [{ title: "Sign in - Smarticketing" }] }),
-});
 
 const signInSchema = z.object({ email: z.string().email(), password: z.string().min(6) });
 const signUpSchema = z.object({
@@ -34,7 +29,7 @@ function Auth() {
 
   useEffect(() => {
     if (!authLoading && user && roleResolved) {
-      nav({ to: isAdmin ? "/admin" : "/events" });
+      nav(isAdmin ? "/admin" : "/events", { replace: true });
     }
   }, [user, isAdmin, authLoading, roleResolved, nav]);
 
@@ -222,3 +217,5 @@ function PasswordField({ label, name, ...props }: any) {
     </div>
   );
 }
+
+export default Auth;

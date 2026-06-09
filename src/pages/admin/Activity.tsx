@@ -1,10 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Activity, UserPlus, Ticket, CreditCard } from "lucide-react";
 import { format } from "date-fns";
-
-export const Route = createFileRoute("/admin/activity")({ component: ActivityLog });
 
 function ActivityLog() {
   const [items, setItems] = useState<any[]>([]);
@@ -56,3 +54,5 @@ function ActivityLog() {
     </div>
   );
 }
+
+export default ActivityLog;

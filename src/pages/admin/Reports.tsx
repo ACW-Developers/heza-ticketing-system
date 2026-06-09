@@ -1,11 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Loader2, FileText, Download } from "lucide-react";
 import { format } from "date-fns";
-
-export const Route = createFileRoute("/admin/reports")({ component: Reports });
 
 function Reports() {
   const [events, setEvents] = useState<any[]>([]);
@@ -68,3 +66,5 @@ function Reports() {
     </div>
   );
 }
+
+export default Reports;

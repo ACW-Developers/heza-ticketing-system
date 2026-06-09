@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,11 +9,6 @@ import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/my-tickets")({
-  component: MyTickets,
-  head: () => ({ meta: [{ title: "My Tickets - Smarticketing" }] }),
-});
-
 function MyTickets() {
   const { user, loading } = useAuth();
   const nav = useNavigate();
@@ -23,7 +18,7 @@ function MyTickets() {
   const ticketRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
-    if (!loading && !user) nav({ to: "/auth" });
+    if (!loading && !user) nav("/auth");
   }, [loading, user, nav]);
 
   useEffect(() => {
@@ -152,3 +147,5 @@ function MyTickets() {
     </Layout>
   );
 }
+
+export default MyTickets;
