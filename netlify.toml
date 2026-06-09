@@ -1,17 +1,7 @@
-# Netlify hosts the frontend as a SPA. All backend logic (checkout, verify,
-# setup-admin) runs on Lovable Cloud Edge Functions, called directly from
-# the browser via supabase.functions.invoke(). No Cloudflare involved.
-#
-# In the Netlify UI just import the repo — the settings below take over.
-# No env vars needed on Netlify; the publishable Supabase URL/key are
-# baked into the client bundle at build time.
-
 [build]
-  command = "bun run build"
-  publish = "dist/client"
+  command = "npm run build"
+  publish = "dist"
 
-# SPA fallback: every unknown path serves index.html so the
-# TanStack Router can take over on the client.
 [[redirects]]
   from = "/*"
   to = "/index.html"
