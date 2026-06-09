@@ -1,5 +1,5 @@
 import logo from "@/assets/logo.png";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 
 export function Logo({ size = 36, withText = true }: { size?: number; withText?: boolean }) {
   return (
