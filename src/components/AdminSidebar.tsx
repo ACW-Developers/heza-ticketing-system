@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { Logo } from "./Logo";

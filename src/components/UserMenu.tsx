@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import {
@@ -55,26 +55,26 @@ export function UserMenu() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Quick links</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => nav({ to: "/events" })}>
+          <DropdownMenuItem onClick={() => nav("/events")}>
             <CalendarDays className="mr-2 h-4 w-4" /> Browse events
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => nav({ to: "/my-tickets" })}>
+          <DropdownMenuItem onClick={() => nav("/my-tickets")}>
             <Ticket className="mr-2 h-4 w-4" /> My tickets
           </DropdownMenuItem>
           {isAdmin && (
-            <DropdownMenuItem onClick={() => nav({ to: "/admin" })}>
+            <DropdownMenuItem onClick={() => nav("/admin")}>
               <LayoutDashboard className="mr-2 h-4 w-4" /> Admin dashboard
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem onClick={() => nav({ to: "/admin/profile" })}>
+          <DropdownMenuItem onClick={() => nav("/admin/profile")}>
             <UserIcon className="mr-2 h-4 w-4" /> Profile
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => nav({ to: "/admin/settings" })}>
+          <DropdownMenuItem onClick={() => nav("/admin/settings")}>
             <Settings className="mr-2 h-4 w-4" /> Settings
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={async () => { await signOut(); nav({ to: "/auth" }); }}
+            onClick={async () => { await signOut(); nav("/auth"); }}
             className="text-destructive focus:text-destructive"
           >
             <LogOut className="mr-2 h-4 w-4" /> Sign out
