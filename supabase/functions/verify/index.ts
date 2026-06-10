@@ -24,9 +24,9 @@ Deno.serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    const { data: claims, error: claimsErr } = await supabase.auth.getClaims(token);
-    if (claimsErr || !claims?.claims?.sub) return json({ error: "Unauthorized" }, 401);
-    const userId = claims.claims.sub as string;
+    const { data: userData, error: userErr } = await supabase.auth.getUser(token);
+    if (userErr || !userData?.user) return json({ error: "Unauthorized" }, 401);
+    const userId = userData.user.id;
 
     const { sessionId } = z.object({ sessionId: z.string() }).parse(await req.json());
 
