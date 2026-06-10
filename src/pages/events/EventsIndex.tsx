@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { EventCard } from "@/components/EventCard";
 import { Input } from "@/components/ui/input";
+import { RefreshButton } from "@/components/RefreshButton";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Loader2 } from "lucide-react";
 
@@ -32,8 +33,13 @@ function EventsPage() {
   return (
     <Layout>
       <section className="container mx-auto px-4 pt-12 pb-6">
-        <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">Upcoming events</h1>
-        <p className="mt-2 text-muted-foreground">Find your next event.</p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">Upcoming events</h1>
+            <p className="mt-2 text-muted-foreground">Find your next event.</p>
+          </div>
+          <RefreshButton />
+        </div>
         <div className="relative mt-6 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
