@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Calendar, MapPin, Loader2, Download, Ticket as TicketIcon } from "lucide-react";
 import { format } from "date-fns";
 import QRCode from "qrcode";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
 
 function MyTickets() {
@@ -42,11 +42,19 @@ function MyTickets() {
   async function downloadTicket(t: any) {
     const el = ticketRefs.current[t.id];
     if (!el) return;
-    const canvas = await html2canvas(el, { backgroundColor: "#ffffff", scale: 2, useCORS: true });
-    const link = document.createElement("a");
-    link.download = `ticket-${t.ticket_number}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    try {
+      const dataUrl = await toPng(el, {
+        backgroundColor: "#ffffff",
+        pixelRatio: 2,
+        cacheBust: true,
+      });
+      const link = document.createElement("a");
+      link.download = `ticket-${t.ticket_number}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Ticket download failed", err);
+    }
   }
 
   if (busy) return <Layout><div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div></Layout>;
