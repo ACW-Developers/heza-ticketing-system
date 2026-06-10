@@ -5,6 +5,7 @@ import { useCurrency } from "@/hooks/useCurrency";
 import { Calendar, DollarSign, Ticket, Users, Loader2, TrendingUp } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, LineChart, Line } from "recharts";
 import { format, subDays } from "date-fns";
+import { RefreshButton } from "@/components/RefreshButton";
 
 function Stat({ icon: Icon, label, value, hint }: any) {
   return (
@@ -65,9 +66,12 @@ function Dashboard() {
 
   return (
     <div className="space-y-6 max-w-7xl">
-      <div>
-        <h1 className="font-display text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground text-sm">Overview · {format(new Date(), "EEEE, MMM d · h:mm a")}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground text-sm">Overview · {format(new Date(), "EEEE, MMM d · h:mm a")}</p>
+        </div>
+        <RefreshButton />
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
