@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, CreditCard, DollarSign, TrendingUp } from "lucide-react";
+import { Loader2, CreditCard, Wallet, TrendingUp } from "lucide-react";
 import { format } from "date-fns";
 
 function AdminPayments() {
@@ -31,7 +31,7 @@ function AdminPayments() {
       <h1 className="font-display text-3xl font-bold">Payments</h1>
 
       <div className="grid sm:grid-cols-3 gap-4">
-        <Card icon={DollarSign} label="Total revenue" value={`$${revenue.toFixed(2)}`} />
+        <Card icon={Wallet} label="Total revenue" value={`$${revenue.toFixed(2)}`} />
         <Card icon={CreditCard} label="Paid orders" value={paid.length} />
         <Card icon={TrendingUp} label="Pending" value={pending.length} />
       </div>

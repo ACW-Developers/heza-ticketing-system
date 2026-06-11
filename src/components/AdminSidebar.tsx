@@ -49,7 +49,12 @@ export function AdminSidebar() {
           <SidebarMenu>
             {items.map((it) => (
               <SidebarMenuItem key={it.to}>
-                <SidebarMenuButton asChild isActive={isActive(it.to, (it as any).exact)} tooltip={it.label}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive(it.to, (it as any).exact)}
+                  tooltip={it.label}
+                  className="border border-transparent data-[active=true]:border-primary/40 data-[active=true]:bg-primary/10 hover:border-sidebar-border rounded-lg transition-colors"
+                >
                   <Link to={it.to} className="flex items-center gap-2.5">
                     <it.icon className="h-4 w-4 shrink-0" />
                     <span>{it.label}</span>

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrency } from "@/hooks/useCurrency";
-import { Calendar, DollarSign, Ticket, Users, Loader2, TrendingUp } from "lucide-react";
+import { Calendar, Wallet, Ticket, Users, Loader2, TrendingUp } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, LineChart, Line } from "recharts";
 import { format, subDays } from "date-fns";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -74,10 +74,10 @@ function Dashboard() {
         <RefreshButton />
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <Stat icon={Calendar} label="Events" value={stats.events} hint={`${stats.upcoming} upcoming`} />
         <Stat icon={Ticket} label="Tickets" value={stats.tickets} />
-        <Stat icon={DollarSign} label="Revenue" value={fmt(stats.revenue, { decimals: 0 })} />
+        <Stat icon={Wallet} label="Revenue" value={fmt(stats.revenue, { decimals: 0 })} />
         <Stat icon={Users} label="Attendees" value={stats.attendees} />
         <Stat icon={TrendingUp} label="Avg ticket" value={fmt(stats.tickets ? stats.revenue / stats.tickets : 0, { decimals: 0 })} />
       </div>
