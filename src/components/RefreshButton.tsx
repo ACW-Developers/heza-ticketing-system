@@ -19,7 +19,13 @@ export function RefreshButton({ label = "Refresh" }: { label?: string }) {
         const preserve: Record<string, string> = {};
         for (let i = 0; i < localStorage.length; i++) {
           const k = localStorage.key(i);
-          if (k && (k.startsWith("sb-") || k.includes("supabase.auth"))) {
+          if (
+            k &&
+            (k.startsWith("sb-") ||
+              k.includes("supabase.auth") ||
+              k.startsWith("smarticketing.") ||
+              k === "theme")
+          ) {
             preserve[k] = localStorage.getItem(k) ?? "";
           }
         }
