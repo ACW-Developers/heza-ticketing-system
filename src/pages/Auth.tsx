@@ -84,7 +84,7 @@ function Auth() {
             <div className="h-10 w-10 rounded-xl bg-white/90 backdrop-blur ring-1 ring-white/40 flex items-center justify-center shadow-lg">
               <img src={logo} alt="" className="h-8 w-8 rounded-md" />
             </div>
-            <span className="font-display text-xl font-bold drop-shadow-lg">Smarticketing</span>
+            <span className="font-display text-xl font-bold drop-shadow-lg">Heza Ticketing</span>
           </div>
           <div className="space-y-4 max-w-md">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur px-3 py-1 text-xs font-medium">
@@ -121,10 +121,10 @@ function Auth() {
                 {/* Logo inside the card */}
                 <div className="flex flex-col items-center mb-7">
                   <div className="h-16 w-16 rounded-2xl bg-primary/15 shadow-lg flex items-center justify-center mb-3 ring-2 ring-primary/40">
-                    <img src={logo} alt="Smarticketing" className="h-12 w-12 rounded-lg" />
+                    <img src={logo} alt="Heza Ticketing" className="h-12 w-12 rounded-lg" />
                   </div>
                   <span className="font-display text-2xl font-bold tracking-tight">
-                    Smarticketing<span className="text-primary">.</span>
+                    Heza Ticketing<span className="text-primary">.</span>
                   </span>
                 </div>
 
