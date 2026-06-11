@@ -165,7 +165,7 @@ function Auth() {
                 </TabsList>
 
                 <TabsContent value="signin">
-                  <form onSubmit={handleSignIn} className="space-y-4">
+                  <form onSubmit={handleSignIn} className="space-y-2">
                     <FieldIcon icon={Mail} label="Email" name="email" type="email" required />
                     <PasswordField label="Password" name="password" required minLength={6} />
                     <Button
@@ -184,7 +184,7 @@ function Auth() {
                 </TabsContent>
 
                 <TabsContent value="signup">
-                  <form onSubmit={handleSignUp} className="space-y-4">
+                  <form onSubmit={handleSignUp} className="space-y-2">
                     <FieldIcon icon={UserIcon} label="Full name" name="full_name" required maxLength={100} />
                     <FieldIcon icon={Phone} label="Phone" name="phone" type="tel" required maxLength={20} />
                     <FieldIcon icon={Mail} label="Email" name="email" type="email" required />
