@@ -134,7 +134,7 @@ function Auth() {
               </div>
 
               <Tabs defaultValue="signin">
-                <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50">
+                <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50 p-2 border border-border rounded-lg">
                   <TabsTrigger value="signin">Sign in</TabsTrigger>
                   <TabsTrigger value="signup">Sign up</TabsTrigger>
                 </TabsList>
