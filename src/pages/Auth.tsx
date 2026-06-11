@@ -112,9 +112,6 @@ function Auth() {
             <span className="font-display text-xl font-bold drop-shadow-lg">Heza Ticketing</span>
           </div>
           <div className="space-y-4 max-w-md">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur px-3 py-1 text-xs font-medium">
-              <Sparkles className="h-3.5 w-3.5" /> Trusted by thousands of event-goers
-            </div>
             <h2 className="font-display text-4xl xl:text-5xl font-bold leading-[1.05] drop-shadow-2xl">
               Your next unforgettable event is one tap away.
             </h2>
