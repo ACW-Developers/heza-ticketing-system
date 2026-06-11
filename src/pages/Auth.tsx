@@ -8,18 +8,43 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { toast } from "sonner";
-import { Loader2, Mail, Lock, User as UserIcon, Phone, Sun, Moon, Sparkles, Eye, EyeOff } from "lucide-react";
+import { Loader2, Mail, Lock, User as UserIcon, Phone, Sun, Moon, Sparkles, Eye, EyeOff, LogIn, UserPlus } from "lucide-react";
 import { z } from "zod";
 import authHero from "@/assets/auth-hero.jpg";
 import logo from "@/assets/logo.png";
 
-const signInSchema = z.object({ email: z.string().email(), password: z.string().min(6) });
-const signUpSchema = z.object({
-  full_name: z.string().min(2).max(100),
-  phone: z.string().min(6).max(20),
-  email: z.string().email(),
-  password: z.string().min(6).max(72),
+const signInSchema = z.object({
+  email: z.string().email("Please enter a valid email address."),
+  password: z.string().min(6, "Password must be at least 6 characters."),
 });
+const signUpSchema = z.object({
+  full_name: z.string().min(2, "Please enter your full name.").max(100, "Name is too long."),
+  phone: z.string().min(6, "Please enter a valid phone number.").max(20, "Phone number is too long."),
+  email: z.string().email("Please enter a valid email address."),
+  password: z.string().min(6, "Password must be at least 6 characters.").max(72, "Password is too long."),
+});
+
+// Convert raw auth errors into clear, friendly messages.
+function friendlyAuthError(message: string): string {
+  const m = message.toLowerCase();
+  if (m.includes("invalid login") || m.includes("invalid credentials"))
+    return "Wrong email or password. Please try again.";
+  if (m.includes("email not confirmed"))
+    return "Please confirm your email address before signing in. Check your inbox.";
+  if (m.includes("user already registered") || m.includes("already registered") || m.includes("already exists"))
+    return "An account with this email already exists. Try signing in instead.";
+  if (m.includes("password should be at least") || m.includes("password is too short"))
+    return "Your password is too short. Use at least 6 characters.";
+  if (m.includes("rate limit") || m.includes("too many"))
+    return "Too many attempts. Please wait a moment and try again.";
+  if (m.includes("network") || m.includes("failed to fetch"))
+    return "Network problem. Check your internet connection and try again.";
+  if (m.includes("invalid email"))
+    return "That email address doesn't look right. Please double-check it.";
+  if (m.includes("signup") && m.includes("disabled"))
+    return "New sign-ups are currently disabled. Please contact support.";
+  return message || "Something went wrong. Please try again.";
+}
 
 function Auth() {
   const nav = useNavigate();
@@ -41,7 +66,7 @@ function Auth() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(friendlyAuthError(error.message));
     toast.success("Welcome back!");
   }
 
@@ -65,7 +90,7 @@ function Auth() {
       },
     });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(friendlyAuthError(error.message));
     toast.success("Account created - signing you in…");
     await supabase.auth.signInWithPassword({ email: parsed.data.email, password: parsed.data.password });
   }
@@ -143,8 +168,17 @@ function Auth() {
                   <form onSubmit={handleSignIn} className="space-y-4">
                     <FieldIcon icon={Mail} label="Email" name="email" type="email" required />
                     <PasswordField label="Password" name="password" required minLength={6} />
-                    <Button type="submit" className="w-full glow-primary h-11" disabled={loading}>
-                      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Sign in
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="group w-full h-12 px-6 rounded-xl font-semibold tracking-wide glow-primary border-2 border-primary/50 hover:border-primary shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
+                    >
+                      {loading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <LogIn className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                      )}
+                      Sign in
                     </Button>
                   </form>
                 </TabsContent>
@@ -155,8 +189,17 @@ function Auth() {
                     <FieldIcon icon={Phone} label="Phone" name="phone" type="tel" required maxLength={20} />
                     <FieldIcon icon={Mail} label="Email" name="email" type="email" required />
                     <PasswordField label="Password" name="password" required minLength={6} maxLength={72} />
-                    <Button type="submit" className="w-full glow-primary h-11" disabled={loading}>
-                      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Create account
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="group w-full h-12 px-6 rounded-xl font-semibold tracking-wide glow-primary border-2 border-primary/50 hover:border-primary shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
+                    >
+                      {loading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <UserPlus className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                      )}
+                      Create account
                     </Button>
                   </form>
                 </TabsContent>
