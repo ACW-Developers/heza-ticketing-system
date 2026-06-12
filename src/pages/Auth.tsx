@@ -1,9 +1,10 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
@@ -48,15 +49,34 @@ function friendlyAuthError(message: string): string {
 
 function Auth() {
   const nav = useNavigate();
+  const [params] = useSearchParams();
+  const initialTab = params.get("mode") === "signup" ? "signup" : "signin";
   const { user, isAdmin, loading: authLoading, roleResolved } = useAuth();
   const { theme, toggle } = useTheme();
   const [loading, setLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotBusy, setForgotBusy] = useState(false);
 
   useEffect(() => {
     if (!authLoading && user && roleResolved) {
       nav(isAdmin ? "/admin" : "/events", { replace: true });
     }
   }, [user, isAdmin, authLoading, roleResolved, nav]);
+
+  async function sendReset(e: React.FormEvent) {
+    e.preventDefault();
+    const parsed = z.string().email().safeParse(forgotEmail.trim());
+    if (!parsed.success) return toast.error("Please enter a valid email address.");
+    setForgotBusy(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotBusy(false);
+    if (error) return toast.error(friendlyAuthError(error.message));
+    toast.success("Check your email for a reset link.");
+    setForgotOpen(false);
+  }
 
   async function handleSignIn(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -155,7 +175,7 @@ function Auth() {
                 <p className="mt-1.5 text-sm text-muted-foreground">Sign in or create your account to book tickets.</p>
               </div>
 
-              <Tabs defaultValue="signin">
+              <Tabs defaultValue={initialTab}>
                 <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50 p-1 border border-border rounded-lg">
                     <TabsTrigger
                       value="signin"
@@ -176,6 +196,15 @@ function Auth() {
                   <form onSubmit={handleSignIn} className="space-y-4">
                     <FieldIcon icon={Mail} label="Email" name="email" type="email" required />
                     <PasswordField label="Password" name="password" required minLength={6} />
+                    <div className="flex justify-end -mt-1">
+                      <button
+                        type="button"
+                        onClick={() => setForgotOpen(true)}
+                        className="text-xs font-medium text-primary hover:underline"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
                     <Button
                       type="submit"
                       disabled={loading}
@@ -218,9 +247,48 @@ function Auth() {
             <p className="mt-6 text-center text-xs text-muted-foreground">
               By continuing you agree to our terms and privacy policy.
             </p>
+            <p className="mt-2 text-center text-xs text-muted-foreground">
+              <Link to="/events" className="hover:text-primary">Continue browsing events without an account →</Link>
+            </p>
           </div>
         </div>
       </div>
+
+      <Dialog open={forgotOpen} onOpenChange={(o) => !forgotBusy && setForgotOpen(o)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset your password</DialogTitle>
+            <DialogDescription>
+              Enter your account email and we'll send a secure link to set a new password.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={sendReset} className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="forgot-email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/70" />
+                <Input
+                  id="forgot-email"
+                  type="email"
+                  required
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  className="pl-10 h-11 border-2 border-primary/30 focus-visible:border-primary"
+                  placeholder="you@example.com"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setForgotOpen(false)} disabled={forgotBusy}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={forgotBusy} className="border-2 border-primary/50 shadow-md shadow-primary/20">
+                {forgotBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send reset link"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
