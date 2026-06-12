@@ -6,6 +6,7 @@ import { CurrencyProvider } from "@/hooks/useCurrency";
 import { Toaster } from "@/components/ui/sonner";
 
 import Auth from "@/pages/Auth";
+import ResetPassword from "@/pages/ResetPassword";
 import MyTickets from "@/pages/MyTickets";
 import SetupAdmin from "@/pages/SetupAdmin";
 import EventsIndex from "@/pages/events/EventsIndex";
@@ -45,8 +46,9 @@ export default function App() {
           <AuthProvider>
             <CurrencyProvider>
               <Routes>
-                <Route path="/" element={<Navigate to="/auth" replace />} />
+                <Route path="/" element={<Navigate to="/events" replace />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/events" element={<EventsIndex />} />
                 <Route path="/events/:id" element={<EventDetail />} />
                 <Route path="/checkout/success" element={<CheckoutSuccess />} />
