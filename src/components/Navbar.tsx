@@ -36,21 +36,19 @@ export function Navbar() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 px-4 rounded-full border-2 border-primary/40 hover:border-primary hover:bg-primary/5 font-semibold"
+                  className="h-9 px-3 sm:px-4 rounded-full border-2 border-primary/40 hover:border-primary hover:bg-primary/5 font-semibold"
                 >
                   <LogIn className="h-3.5 w-3.5" />
-                  <span className="hidden xs:inline">Sign in</span>
-                  <span className="xs:hidden">In</span>
+                  Sign in
                 </Button>
               </Link>
               <Link to="/auth?mode=signup">
                 <Button
                   size="sm"
-                  className="h-9 px-4 rounded-full border-2 border-primary/60 shadow-md shadow-primary/20 hover:shadow-primary/40 font-semibold glow-primary"
+                  className="h-9 px-3 sm:px-4 rounded-full border-2 border-primary/60 shadow-md shadow-primary/20 hover:shadow-primary/40 font-semibold glow-primary"
                 >
                   <UserPlus className="h-3.5 w-3.5" />
-                  <span className="hidden xs:inline">Sign up</span>
-                  <span className="xs:hidden">Up</span>
+                  Sign up
                 </Button>
               </Link>
             </div>
