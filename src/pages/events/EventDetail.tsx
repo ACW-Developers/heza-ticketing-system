@@ -41,13 +41,21 @@ function EventDetail() {
   // Prefill contact from profile
   useEffect(() => {
     if (!user) return;
+    // Immediately seed email from the signed-in account so users always
+    // see their login email pre-filled before profile data arrives.
+    setContact((c) => ({
+      ...c,
+      email: c.email || user.email || "",
+      name: c.name || (user.user_metadata?.full_name as string | undefined) || "",
+      phone: c.phone || (user.user_metadata?.phone as string | undefined) || "",
+    }));
     supabase.from("profiles").select("full_name, phone, email").eq("user_id", user.id).maybeSingle()
       .then(({ data }) => {
-        setContact({
-          name: data?.full_name ?? "",
-          email: data?.email ?? user.email ?? "",
-          phone: data?.phone ?? "",
-        });
+        setContact((c) => ({
+          name: data?.full_name ?? c.name ?? "",
+          email: data?.email ?? user.email ?? c.email ?? "",
+          phone: data?.phone ?? c.phone ?? "",
+        }));
       });
   }, [user]);
 
