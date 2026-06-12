@@ -151,18 +151,29 @@ function Auth() {
                 </div>
 
                 <div className="mb-6 text-center">
-                <h1 className="font-display text-2xl font-bold tracking-tight">Welcome back</h1>
+                <h1 className="font-display text-xl font-bold tracking-tight">Welcome back</h1>
                 <p className="mt-1.5 text-sm text-muted-foreground">Sign in or create your account to book tickets.</p>
               </div>
 
               <Tabs defaultValue="signin">
-                <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50 p-2 border border-border rounded-lg">
-                  <TabsTrigger value="signin">Sign in</TabsTrigger>
-                  <TabsTrigger value="signup">Sign up</TabsTrigger>
-                </TabsList>
+                <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50 p-1 border border-border rounded-lg">
+                    <TabsTrigger
+                      value="signin"
+                      className="w-full rounded-md"
+                    >
+                      Sign in
+                    </TabsTrigger>
+
+                    <TabsTrigger
+                      value="signup"
+                      className="w-full rounded-md"
+                    >
+                      Sign up
+                    </TabsTrigger>
+                  </TabsList>
 
                 <TabsContent value="signin">
-                  <form onSubmit={handleSignIn} className="space-y-0">
+                  <form onSubmit={handleSignIn} className="space-y-4">
                     <FieldIcon icon={Mail} label="Email" name="email" type="email" required />
                     <PasswordField label="Password" name="password" required minLength={6} />
                     <Button
@@ -181,7 +192,7 @@ function Auth() {
                 </TabsContent>
 
                 <TabsContent value="signup">
-                  <form onSubmit={handleSignUp} className="space-y-0">
+                  <form onSubmit={handleSignUp} className="space-y-4">
                     <FieldIcon icon={UserIcon} label="Full name" name="full_name" required maxLength={100} />
                     <FieldIcon icon={Phone} label="Phone" name="phone" type="tel" required maxLength={20} />
                     <FieldIcon icon={Mail} label="Email" name="email" type="email" required />
