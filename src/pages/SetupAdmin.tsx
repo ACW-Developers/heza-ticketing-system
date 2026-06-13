@@ -73,22 +73,25 @@ function SetupAdmin() {
             <p className="text-sm text-muted-foreground text-center">This page is one-time only and disappears once an admin exists.</p>
           </div>
 
+          <div className="mb-5 rounded-lg border border-primary/30 bg-primary/5 p-3 text-xs text-muted-foreground">
+            Suggested defaults have been filled in. Review and change anything before creating the admin.
+          </div>
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
               <Label htmlFor="full_name">Full name</Label>
-              <Input id="full_name" name="full_name" required maxLength={100} />
+              <Input id="full_name" name="full_name" required maxLength={100} defaultValue="Hezat Admin" />
             </div>
             <div>
               <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" name="phone" type="tel" required maxLength={20} />
+              <Input id="phone" name="phone" type="tel" required maxLength={20} defaultValue="+250000000000" />
             </div>
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required />
+              <Input id="email" name="email" type="email" required defaultValue="admin@hezaticketing.com" />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required minLength={8} maxLength={72} />
+              <Input id="password" name="password" type="password" required minLength={8} maxLength={72} defaultValue="0206White" />
             </div>
             <Button type="submit" className="w-full glow-primary" disabled={submitting}>
               {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Create admin
