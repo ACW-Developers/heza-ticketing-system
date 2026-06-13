@@ -26,12 +26,22 @@ function EventDetail() {
   const { user } = useAuth();
   const { format: fmt } = useCurrency();
   const nav = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState<Record<string, number>>({ children: 0, regular: 0, vip: 0, vvip: 0 });
   const [submitting, setSubmitting] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const [contact, setContact] = useState({ name: "", email: "", phone: "" });
+  const [contact, setContact] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    id_number: "",
+    country: "",
+    gender: "",
+    notes: "",
+    agree: false,
+  });
 
   useEffect(() => {
     supabase.from("events").select("*").eq("id", id).maybeSingle().then(({ data }) => {
