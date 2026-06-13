@@ -214,24 +214,63 @@ function EventDetail() {
       </div>
 
       <Dialog open={contactOpen} onOpenChange={(o) => !submitting && setContactOpen(o)}>
-        <DialogContent>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Attendee contact details</DialogTitle>
-            <DialogDescription>We'll send tickets and updates to this contact.</DialogDescription>
+            <DialogTitle>Attendee details</DialogTitle>
+            <DialogDescription>
+              These details are printed on your ticket and used for entry verification.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2">
-            <div className="space-y-1.5">
-              <Label htmlFor="c-name">Full name</Label>
-              <Input id="c-name" value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="c-name">Full name *</Label>
+                <Input id="c-name" value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="c-phone">Phone *</Label>
+                <Input id="c-phone" type="tel" value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} />
+              </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="c-email">Email</Label>
+              <Label htmlFor="c-email">Email *</Label>
               <Input id="c-email" type="email" value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="c-phone">Phone</Label>
-              <Input id="c-phone" type="tel" value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="c-id">National ID / Passport *</Label>
+                <Input id="c-id" value={contact.id_number} onChange={(e) => setContact({ ...contact, id_number: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="c-country">Country *</Label>
+                <Input id="c-country" value={contact.country} onChange={(e) => setContact({ ...contact, country: e.target.value })} placeholder="e.g. Rwanda" />
+              </div>
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="c-gender">Gender</Label>
+              <Select value={contact.gender} onValueChange={(v) => setContact({ ...contact, gender: v })}>
+                <SelectTrigger id="c-gender"><SelectValue placeholder="Select (optional)" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="female">Female</SelectItem>
+                  <SelectItem value="male">Male</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                  <SelectItem value="prefer_not">Prefer not to say</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="c-notes">Special requests (optional)</Label>
+              <Textarea id="c-notes" rows={2} value={contact.notes} onChange={(e) => setContact({ ...contact, notes: e.target.value })} placeholder="Accessibility needs, dietary, etc." />
+            </div>
+            <label className="flex items-start gap-2 text-xs text-muted-foreground pt-1">
+              <input
+                type="checkbox"
+                className="mt-0.5 h-4 w-4 rounded border-border accent-primary"
+                checked={contact.agree}
+                onChange={(e) => setContact({ ...contact, agree: e.target.checked })}
+              />
+              <span>I confirm the details are correct and accept the event terms and refund policy.</span>
+            </label>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setContactOpen(false)} disabled={submitting}>Cancel</Button>
