@@ -84,16 +84,49 @@ function EventDetail() {
     });
   }
 
+  // Restore selection + auto-open checkout after returning from /auth
+  useEffect(() => {
+    if (!event) return;
+    const restore = searchParams.get("checkout");
+    if (restore !== "1") return;
+    const restored: Record<string, number> = { children: 0, regular: 0, vip: 0, vvip: 0 };
+    TYPES.forEach((t) => {
+      const v = parseInt(searchParams.get(t.key) || "0", 10);
+      if (!isNaN(v) && v > 0) restored[t.key] = Math.min(v, maxFor(t.key));
+    });
+    const hasAny = Object.values(restored).some((n) => n > 0);
+    if (hasAny) setQty(restored);
+    // strip params from URL to avoid re-trigger
+    const next = new URLSearchParams(searchParams);
+    next.delete("checkout");
+    TYPES.forEach((t) => next.delete(t.key));
+    setSearchParams(next, { replace: true });
+    if (user && hasAny) setContactOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event, user]);
+
   function startCheckout() {
-    if (!user) { nav("/auth"); return; }
     if (totalQty === 0) return toast.error("Select at least one ticket");
+    if (!user) {
+      // Preserve selection and return path so user comes back to checkout after login
+      const params = new URLSearchParams({ checkout: "1" });
+      TYPES.forEach((t) => {
+        if (qty[t.key] > 0) params.set(t.key, String(qty[t.key]));
+      });
+      const redirect = `/events/${id}?${params.toString()}`;
+      nav(`/auth?redirect=${encodeURIComponent(redirect)}`);
+      return;
+    }
     setContactOpen(true);
   }
 
   async function confirmCheckout() {
     if (!contact.name.trim() || !contact.email.trim() || !contact.phone.trim()) {
-      return toast.error("Please fill in all contact details");
+      return toast.error("Please fill in your name, email and phone");
     }
+    if (!contact.id_number.trim()) return toast.error("National ID or passport number is required");
+    if (!contact.country.trim()) return toast.error("Please enter your country");
+    if (!contact.agree) return toast.error("Please accept the terms to continue");
     setSubmitting(true);
     try {
       const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({ type: t.key, quantity: qty[t.key] }));
