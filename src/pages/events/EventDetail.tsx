@@ -64,6 +64,7 @@ function EventDetail() {
     supabase.from("profiles").select("full_name, phone, email").eq("user_id", user.id).maybeSingle()
       .then(({ data }) => {
         setContact((c) => ({
+          ...c,
           name: data?.full_name ?? c.name ?? "",
           email: data?.email ?? user.email ?? c.email ?? "",
           phone: data?.phone ?? c.phone ?? "",
