@@ -60,9 +60,17 @@ function Auth() {
 
   useEffect(() => {
     if (!authLoading && user && roleResolved) {
-      nav(isAdmin ? "/admin" : "/events", { replace: true });
+      const redirect = params.get("redirect");
+      // Only allow internal redirects (must start with "/" and not "//")
+      const safeRedirect =
+        redirect && redirect.startsWith("/") && !redirect.startsWith("//") ? redirect : null;
+      if (safeRedirect && !isAdmin) {
+        nav(safeRedirect, { replace: true });
+      } else {
+        nav(isAdmin ? "/admin" : "/events", { replace: true });
+      }
     }
-  }, [user, isAdmin, authLoading, roleResolved, nav]);
+  }, [user, isAdmin, authLoading, roleResolved, nav, params]);
 
   async function sendReset(e: React.FormEvent) {
     e.preventDefault();
