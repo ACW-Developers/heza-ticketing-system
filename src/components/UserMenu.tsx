@@ -32,14 +32,14 @@ export function UserMenu() {
     .split(" ").map((s: string) => s[0]).slice(0, 2).join("").toUpperCase();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center  gap-2">
       <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
         {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="gap-2 pr-2 pl-1.5 h-9">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+          <Button variant="ghost" className="gap-2 pr-2 pl-1.5 border-2 border-primary/50 h-9">
+            <div className="flex h-7 w-7 items-center border-2 justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
               {initials}
             </div>
             <span className="hidden sm:inline text-sm font-medium max-w-[140px] truncate">

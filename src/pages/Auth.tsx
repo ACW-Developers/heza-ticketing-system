@@ -150,10 +150,10 @@ function Auth() {
           </Button>
         </div>
 
-        <div className="flex-1 flex items-center justify-center px-6 pb-12">
+        <div className="flex-1 flex items-center justify-center px-3 pb-12">
           <div className="w-full max-w-md">
             {/* Elegant green-bordered card wrapping logo + form */}
-            <div className="relative">
+            <div className="relative ">
               {/* Soft outer glow */}
               <div
                 aria-hidden
@@ -163,7 +163,7 @@ function Auth() {
                 {/* Logo inside the card */}
                 <div className="flex flex-col items-center mb-7">
                   <div className="h-16 w-16 rounded-2xl bg-primary/15 shadow-lg flex items-center justify-center mb-3 ring-2 ring-primary/40">
-                    <img src={logo} alt="Heza Ticketing" className="h-12 w-12 rounded-lg" />
+                    <img src={logo} alt="Heza Ticketing" className="h-14 w-14 rounded-lg" />
                   </div>
                   <span className="font-display text-2xl font-bold tracking-tight">
                     Heza Ticketing<span className="text-primary">.</span>
