@@ -165,28 +165,87 @@ function AdminEvents() {
       </div>
 
       {loading ? <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div> : (
-        <div className="surface-card rounded-2xl overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/40 text-left text-xs uppercase tracking-wider text-muted-foreground">
-              <tr><th className="p-3">Event</th><th className="p-3">Date</th><th className="p-3">Status</th><th className="p-3 text-right">Actions</th></tr>
-            </thead>
-            <tbody>
-              {events.map((e) => (
-                <tr key={e.id} className="border-t border-border">
-                  <td className="p-3 font-semibold">{e.title}<div className="text-xs text-muted-foreground font-normal">{e.venue}</div></td>
-                  <td className="p-3 text-muted-foreground">{format(new Date(e.event_date), "MMM d, yyyy")}</td>
-                  <td className="p-3"><span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-xs capitalize">{e.status}</span></td>
-                  <td className="p-3 text-right">
-                    <Button size="icon" variant="ghost" onClick={() => startEdit(e)}><Pencil className="h-4 w-4" /></Button>
-                    <Button size="icon" variant="ghost" onClick={() => handleDelete(e.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                  </td>
+        <>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatBox icon={Calendar} label="Events" value={events.length} hint={`${overview.upcoming} upcoming`} />
+            <StatBox icon={Ticket} label="Tickets sold" value={overview.totalTickets} />
+            <StatBox icon={Wallet} label="Revenue" value={fmt(overview.totalRevenue, { decimals: 0 })} />
+            <StatBox icon={MapPin} label="Venues" value={new Set(events.map((e) => e.venue)).size} />
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div className="surface-card rounded-2xl p-5">
+              <h3 className="font-display text-base font-semibold mb-3">Events by status</h3>
+              <div className="h-56">
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie data={overview.statusData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
+                      {overview.statusData.map((s, i) => <Cell key={i} fill={STATUS_COLORS[s.name] ?? "hsl(var(--primary))"} />)}
+                    </Pie>
+                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                    <Legend wrapperStyle={{ fontSize: 11 }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <div className="surface-card rounded-2xl p-5">
+              <h3 className="font-display text-base font-semibold mb-3">Top events by revenue</h3>
+              <div className="h-56">
+                <ResponsiveContainer>
+                  <BarChart data={overview.topRevenue}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={10} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                    <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+
+          <div className="surface-card rounded-2xl overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/40 text-left text-xs uppercase tracking-wider text-muted-foreground">
+                <tr>
+                  <th className="p-3">Event</th><th className="p-3">Date</th><th className="p-3">Status</th>
+                  <th className="p-3 text-right">Tickets</th><th className="p-3 text-right">Revenue</th>
+                  <th className="p-3 text-right">Actions</th>
                 </tr>
-              ))}
-              {events.length === 0 && <tr><td colSpan={4} className="p-10 text-center text-muted-foreground">No events yet.</td></tr>}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {events.map((e) => (
+                  <tr key={e.id} className="border-t border-border hover:bg-muted/20">
+                    <td className="p-3 font-semibold">{e.title}<div className="text-xs text-muted-foreground font-normal">{e.venue}</div></td>
+                    <td className="p-3 text-muted-foreground">{format(new Date(e.event_date), "MMM d, yyyy")}</td>
+                    <td className="p-3"><span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-xs capitalize">{e.status}</span></td>
+                    <td className="p-3 text-right">{ticketStats[e.id]?.tickets ?? 0}</td>
+                    <td className="p-3 text-right font-semibold">{fmt(ticketStats[e.id]?.revenue ?? 0, { decimals: 0 })}</td>
+                    <td className="p-3 text-right">
+                      <Button size="icon" variant="ghost" onClick={() => startEdit(e)}><Pencil className="h-4 w-4" /></Button>
+                      <Button size="icon" variant="ghost" onClick={() => handleDelete(e.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                    </td>
+                  </tr>
+                ))}
+                {events.length === 0 && <tr><td colSpan={6} className="p-10 text-center text-muted-foreground">No events yet.</td></tr>}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
+    </div>
+  );
+}
+
+function StatBox({ icon: Icon, label, value, hint }: any) {
+  return (
+    <div className="surface-card rounded-xl p-5">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
+        <Icon className="h-4 w-4 text-primary" />
+      </div>
+      <div className="font-display text-2xl font-bold">{value}</div>
+      {hint && <div className="text-xs text-muted-foreground mt-0.5">{hint}</div>}
     </div>
   );
 }
