@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          actor_name: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_name?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_name?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           created_at: string
@@ -77,6 +113,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          for_admin: boolean
+          id: string
+          link: string | null
+          metadata: Json | null
+          read_by: string[] | null
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          for_admin?: boolean
+          id?: string
+          link?: string | null
+          metadata?: Json | null
+          read_by?: string[] | null
+          title: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          for_admin?: boolean
+          id?: string
+          link?: string | null
+          metadata?: Json | null
+          read_by?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           created_at: string
@@ -121,6 +190,59 @@ export type Database = {
           },
         ]
       }
+      page_views: {
+        Row: {
+          browser: string | null
+          country: string | null
+          created_at: string
+          device: string | null
+          event_id: string | null
+          id: number
+          language: string | null
+          os: string | null
+          path: string
+          referrer: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          browser?: string | null
+          country?: string | null
+          created_at?: string
+          device?: string | null
+          event_id?: string | null
+          id?: number
+          language?: string | null
+          os?: string | null
+          path: string
+          referrer?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          browser?: string | null
+          country?: string | null
+          created_at?: string
+          device?: string | null
+          event_id?: string | null
+          id?: number
+          language?: string | null
+          os?: string | null
+          path?: string
+          referrer?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_views_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -158,9 +280,13 @@ export type Database = {
           attendee_phone: string | null
           checked_in: boolean
           checked_in_at: string | null
+          country: string | null
           created_at: string
           event_id: string
+          gender: string | null
           id: string
+          id_number: string | null
+          notes: string | null
           order_id: string
           price: number
           ticket_number: string
@@ -173,9 +299,13 @@ export type Database = {
           attendee_phone?: string | null
           checked_in?: boolean
           checked_in_at?: string | null
+          country?: string | null
           created_at?: string
           event_id: string
+          gender?: string | null
           id?: string
+          id_number?: string | null
+          notes?: string | null
           order_id: string
           price: number
           ticket_number: string
@@ -188,9 +318,13 @@ export type Database = {
           attendee_phone?: string | null
           checked_in?: boolean
           checked_in_at?: string | null
+          country?: string | null
           created_at?: string
           event_id?: string
+          gender?: string | null
           id?: string
+          id_number?: string | null
+          notes?: string | null
           order_id?: string
           price?: number
           ticket_number?: string
