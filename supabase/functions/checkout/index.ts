@@ -17,6 +17,10 @@ const cartSchema = z.object({
     name: z.string().min(2).max(100),
     email: z.string().email(),
     phone: z.string().min(6).max(20),
+    id_number: z.string().max(60).optional().default(""),
+    country: z.string().max(80).optional().default(""),
+    gender: z.string().max(20).optional().default(""),
+    notes: z.string().max(500).optional().default(""),
   }),
 });
 
@@ -101,6 +105,10 @@ Deno.serve(async (req) => {
         attendee_name: data.attendee.name,
         attendee_email: data.attendee.email,
         attendee_phone: data.attendee.phone,
+        attendee_id_number: data.attendee.id_number ?? "",
+        attendee_country: data.attendee.country ?? "",
+        attendee_gender: data.attendee.gender ?? "",
+        attendee_notes: (data.attendee.notes ?? "").slice(0, 480),
       },
     });
 
