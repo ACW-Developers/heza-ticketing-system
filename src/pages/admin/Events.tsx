@@ -1,15 +1,27 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCurrency } from "@/hooks/useCurrency";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Calendar, MapPin, Ticket, Wallet } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import {
+  PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+} from "recharts";
+
+const STATUS_COLORS: Record<string, string> = {
+  published: "hsl(var(--success))",
+  draft: "hsl(var(--muted-foreground))",
+  cancelled: "hsl(var(--destructive))",
+  completed: "hsl(var(--primary))",
+};
 
 const empty = {
   id: "", title: "", description: "", event_date: "", venue: "", poster_url: "",
