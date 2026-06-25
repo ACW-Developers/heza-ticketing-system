@@ -1,21 +1,21 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { useTheme } from "@/hooks/useTheme";
+import { Link, useLocation } from "react-router-dom";
 import { Logo } from "./Logo";
 import { UserMenu } from "./UserMenu";
+import { NotificationBell } from "./NotificationBell";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar,
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard, CalendarDays, Users, Ticket, User as UserIcon, Settings,
-  CreditCard, Activity, BarChart3, FileText, Shield,
+  CreditCard, Activity, BarChart3, FileText, Shield, ScanLine,
 } from "lucide-react";
 
 const main = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/events", label: "Events", icon: CalendarDays },
   { to: "/admin/attendees", label: "Attendees", icon: Ticket },
+  { to: "/admin/scanner", label: "Scanner", icon: ScanLine },
   { to: "/my-tickets", label: "My Tickets", icon: Ticket },
 ];
 
@@ -95,7 +95,10 @@ export function AdminTopbar() {
           <SidebarTriggerInline />
           <h2 className="text-sm font-medium text-muted-foreground hidden sm:block">Admin Console</h2>
         </div>
-        <UserMenu />
+        <div className="flex items-center gap-1">
+          <NotificationBell />
+          <UserMenu />
+        </div>
       </div>
     </header>
   );

@@ -73,6 +73,10 @@ Deno.serve(async (req) => {
           attendee_name: meta.attendee_name ?? null,
           attendee_email: meta.attendee_email ?? null,
           attendee_phone: meta.attendee_phone ?? null,
+          id_number: meta.attendee_id_number || null,
+          country: meta.attendee_country || null,
+          gender: meta.attendee_gender || null,
+          notes: meta.attendee_notes || null,
           price: priceMap[it.type],
         });
       }

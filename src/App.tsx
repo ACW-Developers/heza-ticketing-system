@@ -21,8 +21,10 @@ import AdminPayments from "@/pages/admin/Payments";
 import ActivityLog from "@/pages/admin/Activity";
 import Traffic from "@/pages/admin/Traffic";
 import Reports from "@/pages/admin/Reports";
+import Scanner from "@/pages/admin/Scanner";
 import Profile from "@/pages/admin/Profile";
 import Settings from "@/pages/admin/Settings";
+import { PageViewTracker } from "@/components/PageViewTracker";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +47,7 @@ export default function App() {
         <BrowserRouter>
           <AuthProvider>
             <CurrencyProvider>
+              <PageViewTracker />
               <Routes>
                 <Route path="/" element={<Navigate to="/events" replace />} />
                 <Route path="/auth" element={<Auth />} />
@@ -58,6 +61,7 @@ export default function App() {
                   <Route index element={<Dashboard />} />
                   <Route path="events" element={<AdminEvents />} />
                   <Route path="attendees" element={<Attendees />} />
+                  <Route path="scanner" element={<Scanner />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="payments" element={<AdminPayments />} />
                   <Route path="activity" element={<ActivityLog />} />
