@@ -32,7 +32,9 @@ const empty = {
 
 function AdminEvents() {
   const { user } = useAuth();
+  const { format: fmt } = useCurrency();
   const [events, setEvents] = useState<any[]>([]);
+  const [ticketStats, setTicketStats] = useState<Record<string, { tickets: number; revenue: number }>>({});
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<any>(empty);
@@ -40,11 +42,34 @@ function AdminEvents() {
 
   async function load() {
     setLoading(true);
-    const { data } = await supabase.from("events").select("*").order("event_date", { ascending: false });
-    setEvents(data ?? []);
+    const [{ data: evts }, { data: tix }] = await Promise.all([
+      supabase.from("events").select("*").order("event_date", { ascending: false }),
+      supabase.from("tickets").select("event_id, price"),
+    ]);
+    const m: Record<string, { tickets: number; revenue: number }> = {};
+    for (const t of tix ?? []) {
+      const r = m[t.event_id] ?? { tickets: 0, revenue: 0 };
+      r.tickets++; r.revenue += Number(t.price);
+      m[t.event_id] = r;
+    }
+    setTicketStats(m);
+    setEvents(evts ?? []);
     setLoading(false);
   }
   useEffect(() => { load(); }, []);
+
+  const overview = useMemo(() => {
+    const byStatus: Record<string, number> = {};
+    for (const e of events) byStatus[e.status] = (byStatus[e.status] ?? 0) + 1;
+    const statusData = Object.entries(byStatus).map(([name, value]) => ({ name, value }));
+    const topRevenue = events
+      .map((e) => ({ name: e.title.slice(0, 18), revenue: ticketStats[e.id]?.revenue ?? 0, tickets: ticketStats[e.id]?.tickets ?? 0 }))
+      .sort((a, b) => b.revenue - a.revenue).slice(0, 6);
+    const totalTickets = Object.values(ticketStats).reduce((s, x) => s + x.tickets, 0);
+    const totalRevenue = Object.values(ticketStats).reduce((s, x) => s + x.revenue, 0);
+    const upcoming = events.filter((e) => new Date(e.event_date) > new Date()).length;
+    return { statusData, topRevenue, totalTickets, totalRevenue, upcoming };
+  }, [events, ticketStats]);
 
   function startNew() { setForm(empty); setOpen(true); }
   function startEdit(e: any) {
