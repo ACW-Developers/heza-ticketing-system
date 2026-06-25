@@ -17,10 +17,10 @@ import {
 } from "recharts";
 
 const STATUS_COLORS: Record<string, string> = {
-  published: "hsl(var(--success))",
-  draft: "hsl(var(--muted-foreground))",
-  cancelled: "hsl(var(--destructive))",
-  completed: "hsl(var(--primary))",
+  published: "#22c55e",
+  draft: "#6b7280",
+  cancelled: "#ef4444",
+  completed: "#3b82f6",
 };
 
 const empty = {

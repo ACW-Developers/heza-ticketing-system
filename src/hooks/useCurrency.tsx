@@ -3,13 +3,13 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 export type CurrencyCode = "USD" | "KES" | "RWF" | "UGX" | "TZS" | "EUR" | "GBP";
 
 export const CURRENCIES: { code: CurrencyCode; label: string; symbol: string; locale: string }[] = [
-  { code: "USD", label: "US Dollar", symbol: "$", locale: "en-US" },
   { code: "KES", label: "Kenyan Shilling", symbol: "KSh", locale: "en-KE" },
   { code: "RWF", label: "Rwandan Franc", symbol: "RF", locale: "rw-RW" },
   { code: "UGX", label: "Ugandan Shilling", symbol: "USh", locale: "en-UG" },
   { code: "TZS", label: "Tanzanian Shilling", symbol: "TSh", locale: "en-TZ" },
   { code: "EUR", label: "Euro", symbol: "€", locale: "en-IE" },
   { code: "GBP", label: "British Pound", symbol: "£", locale: "en-GB" },
+    { code: "USD", label: "US Dollar", symbol: "$", locale: "en-US" },
 ];
 
 const KEY = "smarticketing.currency";

@@ -31,7 +31,7 @@ function AdminPayments() {
       <h1 className="font-display text-3xl font-bold">Payments</h1>
 
       <div className="grid sm:grid-cols-3 gap-4">
-        <Card icon={Wallet} label="Total revenue" value={`$${revenue.toFixed(2)}`} />
+        <Card icon={Wallet} label="Total revenue" value={`Ksh ${revenue.toFixed(2)}`} />
         <Card icon={CreditCard} label="Paid orders" value={paid.length} />
         <Card icon={TrendingUp} label="Pending" value={pending.length} />
       </div>
@@ -49,7 +49,7 @@ function AdminPayments() {
               <tr key={o.id} className="border-t border-border">
                 <td className="p-3 text-muted-foreground text-xs">{format(new Date(o.created_at), "MMM d, h:mm a")}</td>
                 <td className="p-3">{o.events?.title ?? "-"}</td>
-                <td className="p-3 font-semibold">${Number(o.total_amount).toFixed(2)}</td>
+                <td className="p-3 font-semibold">Ksh{Number(o.total_amount).toFixed(2)}</td>
                 <td className="p-3">
                   <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                     o.status === "paid" ? "bg-primary/15 text-primary" :
