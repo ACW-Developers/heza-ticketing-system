@@ -63,40 +63,43 @@ function Scanner() {
     return () => clearInterval(t);
   }, [tab]);
 
-  // Camera scanner lifecycle
+  // Camera lifecycle — start only on user click for reliable permissions
   useEffect(() => {
-    if (tab !== "camera") {
-      stopCamera();
-      return;
-    }
-    startCamera();
-    return () => { stopCamera(); };
+    if (tab !== "camera") stopCamera();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
+  useEffect(() => () => { stopCamera(); }, []);
 
   async function startCamera() {
     try {
-      if (scannerRef.current) return;
+      await stopCamera();
       const el = document.getElementById("qr-camera");
-      if (!el) return;
-      const sc = new Html5Qrcode("qr-camera");
+      if (!el) { toast.error("Camera surface not ready"); return; }
+      const sc = new Html5Qrcode("qr-camera", { verbose: false } as any);
       scannerRef.current = sc;
-      await sc.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 260, height: 260 } },
-        (text) => handleScan(text),
-        () => {}
-      );
+      const config = { fps: 12, qrbox: { width: 260, height: 260 }, aspectRatio: 1.3333 };
+      try {
+        await sc.start({ facingMode: { exact: "environment" } } as any, config, (t) => handleScan(t), () => {});
+      } catch {
+        // Fallback: pick from available cameras
+        const cams = await Html5Qrcode.getCameras();
+        if (!cams?.length) throw new Error("No camera devices found");
+        const back = cams.find((c) => /back|rear|environment/i.test(c.label)) ?? cams[cams.length - 1];
+        await sc.start(back.id, config, (t) => handleScan(t), () => {});
+      }
       setScannerActive(true);
     } catch (e: any) {
-      toast.error("Camera unavailable: " + (e?.message ?? "permission denied"));
+      setScannerActive(false);
+      scannerRef.current = null;
+      toast.error("Camera unavailable: " + (e?.message ?? "permission denied. Allow camera access in your browser."));
     }
   }
   async function stopCamera() {
     const sc = scannerRef.current;
     scannerRef.current = null;
     setScannerActive(false);
-    try { await sc?.stop(); await sc?.clear(); } catch { /* */ }
+    try { if (sc && (sc as any).isScanning) { await sc.stop(); } } catch { /* */ }
+    try { await sc?.clear(); } catch { /* */ }
   }
 
   async function handleScan(rawCode: string) {
