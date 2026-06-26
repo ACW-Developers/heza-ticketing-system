@@ -30,12 +30,23 @@ function ActivityLog() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from("activity_logs")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(500);
-      setItems(data ?? []);
+      const [{ data: logs }, { data: views }] = await Promise.all([
+        supabase.from("activity_logs").select("*").order("created_at", { ascending: false }).limit(500),
+        supabase.from("page_views").select("*").order("created_at", { ascending: false }).limit(300),
+      ]);
+      const viewItems = (views ?? []).map((v: any) => ({
+        id: "pv-" + v.id,
+        created_at: v.created_at,
+        actor_id: v.user_id,
+        actor_email: null,
+        actor_name: v.device ? `${v.device} · ${v.browser ?? ""}`.trim() : "Visitor",
+        action: "page.view",
+        metadata: { path: v.path, referrer: v.referrer, country: v.country, os: v.os, browser: v.browser },
+      }));
+      const merged = [...(logs ?? []), ...viewItems].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      setItems(merged);
       setLoading(false);
     })();
   }, []);
