@@ -72,29 +72,53 @@ function AdminEvents() {
     return { statusData, topRevenue, totalTickets, totalRevenue, upcoming };
   }, [events, ticketStats]);
 
-  function startNew() { setForm(empty); setOpen(true); }
+  function startNew() { setForm({ ...empty, poster_urls: [] }); setOpen(true); }
   function startEdit(e: any) {
-    setForm({ ...e, event_date: format(new Date(e.event_date), "yyyy-MM-dd'T'HH:mm") });
+    setForm({
+      ...e,
+      event_date: format(new Date(e.event_date), "yyyy-MM-dd'T'HH:mm"),
+      poster_urls: Array.isArray(e.poster_urls) ? e.poster_urls : [],
+    });
     setOpen(true);
   }
 
-  async function handleUpload(file: File) {
-    const ext = file.name.split(".").pop();
-    const path = `${user!.id}/${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("event-posters").upload(path, file);
-    if (error) return toast.error(error.message);
-    const { data } = supabase.storage.from("event-posters").getPublicUrl(path);
-    setForm((f: any) => ({ ...f, poster_url: data.publicUrl }));
-    toast.success("Poster uploaded");
+  async function handleUpload(files: FileList) {
+    const uploaded: string[] = [];
+    for (const file of Array.from(files)) {
+      const ext = file.name.split(".").pop();
+      const path = `${user!.id}/${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
+      const { error } = await supabase.storage.from("event-posters").upload(path, file);
+      if (error) { toast.error(error.message); continue; }
+      const { data } = supabase.storage.from("event-posters").getPublicUrl(path);
+      uploaded.push(data.publicUrl);
+    }
+    if (!uploaded.length) return;
+    setForm((f: any) => {
+      const all = [...(f.poster_urls ?? []), ...uploaded];
+      return { ...f, poster_urls: all, poster_url: f.poster_url || uploaded[0] };
+    });
+    toast.success(`${uploaded.length} image${uploaded.length > 1 ? "s" : ""} uploaded`);
+  }
+
+  function removeImage(url: string) {
+    setForm((f: any) => {
+      const all = (f.poster_urls ?? []).filter((u: string) => u !== url);
+      return { ...f, poster_urls: all, poster_url: f.poster_url === url ? (all[0] ?? "") : f.poster_url };
+    });
+  }
+  function makeCover(url: string) {
+    setForm((f: any) => ({ ...f, poster_url: url }));
   }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
+    const posterUrls: string[] = form.poster_urls?.length ? form.poster_urls : (form.poster_url ? [form.poster_url] : []);
+    const cover = form.poster_url || posterUrls[0] || null;
     const payload: any = {
       title: form.title, description: form.description, venue: form.venue,
       event_date: new Date(form.event_date).toISOString(),
-      poster_url: form.poster_url || null, status: form.status,
+      poster_url: cover, poster_urls: posterUrls, status: form.status,
       price_children: Number(form.price_children), price_regular: Number(form.price_regular),
       price_vip: Number(form.price_vip), price_vvip: Number(form.price_vvip),
       qty_children: Number(form.qty_children), qty_regular: Number(form.qty_regular),
