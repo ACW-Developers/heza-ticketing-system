@@ -25,6 +25,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 const empty = {
   id: "", title: "", description: "", event_date: "", venue: "", poster_url: "",
+  poster_urls: [] as string[],
   price_children: 0, price_regular: 0, price_vip: 0, price_vvip: 0,
   qty_children: 0, qty_regular: 0, qty_vip: 0, qty_vvip: 0,
   status: "published",
