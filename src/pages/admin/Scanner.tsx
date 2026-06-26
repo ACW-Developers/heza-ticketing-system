@@ -243,10 +243,19 @@ function Scanner() {
               </div>
             </TabsContent>
 
-            <TabsContent value="camera" className="pt-4">
-              <div id="qr-camera" className="w-full rounded-xl overflow-hidden bg-black aspect-video" />
-              <p className="text-xs text-muted-foreground mt-3 text-center">
-                {scannerActive ? "Point camera at the QR code on the ticket" : "Starting camera..."}
+            <TabsContent value="camera" className="pt-4 space-y-3">
+              <div id="qr-camera" className="w-full rounded-xl overflow-hidden bg-black min-h-[260px] flex items-center justify-center text-white/60 text-xs">
+                {!scannerActive && "Camera preview will appear here"}
+              </div>
+              <div className="flex gap-2">
+                {!scannerActive ? (
+                  <Button onClick={startCamera} className="flex-1"><Camera className="h-4 w-4 mr-1.5" /> Start camera</Button>
+                ) : (
+                  <Button variant="outline" onClick={stopCamera} className="flex-1">Stop camera</Button>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                {scannerActive ? "Point the rear camera at the QR code on the ticket" : "Tap Start camera. Your browser will ask for permission."}
               </p>
             </TabsContent>
 
