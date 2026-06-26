@@ -10,7 +10,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
 } from "recharts";
 
-const COLORS = ["hsl(var(--primary))", "hsl(var(--accent))", "hsl(var(--success))", "#f59e0b", "#ef4444", "#8b5cf6"];
+const COLORS = ["var(--color-primary)", "var(--color-accent)", "var(--color-success)", "#f59e0b", "#ef4444", "#8b5cf6"];
 
 function tally(arr: any[], key: (x: any) => string | null | undefined, top = 8) {
   const map: Record<string, number> = {};
@@ -114,7 +114,7 @@ function Attendees() {
               <Pie data={byType} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
                 {byType.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
-              <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+              <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
             </PieChart>
           </ResponsiveContainer>
@@ -123,10 +123,10 @@ function Attendees() {
           <ResponsiveContainer>
             <PieChart>
               <Pie data={checkinProgress} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75}>
-                <Cell fill="hsl(var(--success))" />
-                <Cell fill="hsl(var(--muted))" />
+                <Cell fill="var(--color-success)" />
+                <Cell fill="var(--color-muted)" />
               </Pie>
-              <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+              <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
             </PieChart>
           </ResponsiveContainer>
@@ -137,7 +137,7 @@ function Attendees() {
               <Pie data={byGender} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75}>
                 {byGender.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
-              <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+              <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
             </PieChart>
           </ResponsiveContainer>
