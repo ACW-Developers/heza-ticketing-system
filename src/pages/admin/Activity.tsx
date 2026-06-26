@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Loader2, Activity, UserPlus, Ticket, CreditCard, Shield, KeyRound, ScanLine,
-  Search, UserX, Filter,
+  Search, UserX, Filter, Eye, LogIn,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { Input } from "@/components/ui/input";
@@ -16,8 +16,10 @@ const ACTION_META: Record<string, { icon: any; tone: string; label: string }> = 
   "user.role.revoked": { icon: Shield, tone: "text-orange-500 bg-orange-500/10", label: "Admin revoked" },
   "user.password_reset_sent": { icon: KeyRound, tone: "text-yellow-500 bg-yellow-500/10", label: "Password reset sent" },
   "user.deleted": { icon: UserX, tone: "text-destructive bg-destructive/10", label: "User deleted" },
-  "user.signup": { icon: UserPlus, tone: "text-accent bg-accent/10", label: "User signed up" },
+  "user.signup": { icon: UserPlus, tone: "text-accent-foreground bg-accent/30", label: "User signed up" },
+  "user.signin": { icon: LogIn, tone: "text-primary bg-primary/10", label: "User signed in" },
   "order.paid": { icon: CreditCard, tone: "text-success bg-success/10", label: "Order paid" },
+  "page.view": { icon: Eye, tone: "text-muted-foreground bg-muted", label: "Page viewed" },
 };
 
 function ActivityLog() {
