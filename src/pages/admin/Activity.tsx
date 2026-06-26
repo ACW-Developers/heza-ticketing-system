@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Loader2, Activity, UserPlus, Ticket, CreditCard, Shield, KeyRound, ScanLine,
-  Search, UserX, Filter,
+  Search, UserX, Filter, Eye, LogIn,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { Input } from "@/components/ui/input";
@@ -16,8 +16,10 @@ const ACTION_META: Record<string, { icon: any; tone: string; label: string }> = 
   "user.role.revoked": { icon: Shield, tone: "text-orange-500 bg-orange-500/10", label: "Admin revoked" },
   "user.password_reset_sent": { icon: KeyRound, tone: "text-yellow-500 bg-yellow-500/10", label: "Password reset sent" },
   "user.deleted": { icon: UserX, tone: "text-destructive bg-destructive/10", label: "User deleted" },
-  "user.signup": { icon: UserPlus, tone: "text-accent bg-accent/10", label: "User signed up" },
+  "user.signup": { icon: UserPlus, tone: "text-accent-foreground bg-accent/30", label: "User signed up" },
+  "user.signin": { icon: LogIn, tone: "text-primary bg-primary/10", label: "User signed in" },
   "order.paid": { icon: CreditCard, tone: "text-success bg-success/10", label: "Order paid" },
+  "page.view": { icon: Eye, tone: "text-muted-foreground bg-muted", label: "Page viewed" },
 };
 
 function ActivityLog() {
@@ -28,12 +30,23 @@ function ActivityLog() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from("activity_logs")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(500);
-      setItems(data ?? []);
+      const [{ data: logs }, { data: views }] = await Promise.all([
+        supabase.from("activity_logs").select("*").order("created_at", { ascending: false }).limit(500),
+        supabase.from("page_views").select("*").order("created_at", { ascending: false }).limit(300),
+      ]);
+      const viewItems = (views ?? []).map((v: any) => ({
+        id: "pv-" + v.id,
+        created_at: v.created_at,
+        actor_id: v.user_id,
+        actor_email: null,
+        actor_name: v.device ? `${v.device} · ${v.browser ?? ""}`.trim() : "Visitor",
+        action: "page.view",
+        metadata: { path: v.path, referrer: v.referrer, country: v.country, os: v.os, browser: v.browser },
+      }));
+      const merged = [...(logs ?? []), ...viewItems].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      setItems(merged);
       setLoading(false);
     })();
   }, []);

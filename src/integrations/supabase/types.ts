@@ -58,6 +58,7 @@ export type Database = {
           event_date: string
           id: string
           poster_url: string | null
+          poster_urls: string[]
           price_children: number
           price_regular: number
           price_vip: number
@@ -78,6 +79,7 @@ export type Database = {
           event_date: string
           id?: string
           poster_url?: string | null
+          poster_urls?: string[]
           price_children?: number
           price_regular?: number
           price_vip?: number
@@ -98,6 +100,7 @@ export type Database = {
           event_date?: string
           id?: string
           poster_url?: string | null
+          poster_urls?: string[]
           price_children?: number
           price_regular?: number
           price_vip?: number

@@ -25,6 +25,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 const empty = {
   id: "", title: "", description: "", event_date: "", venue: "", poster_url: "",
+  poster_urls: [] as string[],
   price_children: 0, price_regular: 0, price_vip: 0, price_vvip: 0,
   qty_children: 0, qty_regular: 0, qty_vip: 0, qty_vvip: 0,
   status: "published",
@@ -71,29 +72,53 @@ function AdminEvents() {
     return { statusData, topRevenue, totalTickets, totalRevenue, upcoming };
   }, [events, ticketStats]);
 
-  function startNew() { setForm(empty); setOpen(true); }
+  function startNew() { setForm({ ...empty, poster_urls: [] }); setOpen(true); }
   function startEdit(e: any) {
-    setForm({ ...e, event_date: format(new Date(e.event_date), "yyyy-MM-dd'T'HH:mm") });
+    setForm({
+      ...e,
+      event_date: format(new Date(e.event_date), "yyyy-MM-dd'T'HH:mm"),
+      poster_urls: Array.isArray(e.poster_urls) ? e.poster_urls : [],
+    });
     setOpen(true);
   }
 
-  async function handleUpload(file: File) {
-    const ext = file.name.split(".").pop();
-    const path = `${user!.id}/${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("event-posters").upload(path, file);
-    if (error) return toast.error(error.message);
-    const { data } = supabase.storage.from("event-posters").getPublicUrl(path);
-    setForm((f: any) => ({ ...f, poster_url: data.publicUrl }));
-    toast.success("Poster uploaded");
+  async function handleUpload(files: FileList) {
+    const uploaded: string[] = [];
+    for (const file of Array.from(files)) {
+      const ext = file.name.split(".").pop();
+      const path = `${user!.id}/${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
+      const { error } = await supabase.storage.from("event-posters").upload(path, file);
+      if (error) { toast.error(error.message); continue; }
+      const { data } = supabase.storage.from("event-posters").getPublicUrl(path);
+      uploaded.push(data.publicUrl);
+    }
+    if (!uploaded.length) return;
+    setForm((f: any) => {
+      const all = [...(f.poster_urls ?? []), ...uploaded];
+      return { ...f, poster_urls: all, poster_url: f.poster_url || uploaded[0] };
+    });
+    toast.success(`${uploaded.length} image${uploaded.length > 1 ? "s" : ""} uploaded`);
+  }
+
+  function removeImage(url: string) {
+    setForm((f: any) => {
+      const all = (f.poster_urls ?? []).filter((u: string) => u !== url);
+      return { ...f, poster_urls: all, poster_url: f.poster_url === url ? (all[0] ?? "") : f.poster_url };
+    });
+  }
+  function makeCover(url: string) {
+    setForm((f: any) => ({ ...f, poster_url: url }));
   }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
+    const posterUrls: string[] = form.poster_urls?.length ? form.poster_urls : (form.poster_url ? [form.poster_url] : []);
+    const cover = form.poster_url || posterUrls[0] || null;
     const payload: any = {
       title: form.title, description: form.description, venue: form.venue,
       event_date: new Date(form.event_date).toISOString(),
-      poster_url: form.poster_url || null, status: form.status,
+      poster_url: cover, poster_urls: posterUrls, status: form.status,
       price_children: Number(form.price_children), price_regular: Number(form.price_regular),
       price_vip: Number(form.price_vip), price_vvip: Number(form.price_vvip),
       qty_children: Number(form.qty_children), qty_regular: Number(form.qty_regular),
@@ -133,9 +158,25 @@ function AdminEvents() {
                 <div><Label>Venue</Label><Input required value={form.venue} onChange={(e) => setForm({ ...form, venue: e.target.value })} /></div>
               </div>
               <div>
-                <Label>Poster image</Label>
-                <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])} />
-                {form.poster_url && <img src={form.poster_url} alt="poster" className="mt-2 h-20 rounded-lg object-cover" />}
+                <Label>Event images <span className="text-xs text-muted-foreground font-normal">(add one or more)</span></Label>
+                <Input type="file" accept="image/*" multiple onChange={(e) => e.target.files?.length && handleUpload(e.target.files)} />
+                {form.poster_urls?.length > 0 && (
+                  <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {form.poster_urls.map((url: string) => {
+                      const isCover = url === form.poster_url;
+                      return (
+                        <div key={url} className="relative group rounded-lg overflow-hidden border border-border">
+                          <img src={url} alt="event" className="h-20 w-full object-cover" />
+                          {isCover && <span className="absolute top-1 left-1 text-[9px] font-semibold uppercase bg-primary text-primary-foreground px-1.5 py-0.5 rounded">Cover</span>}
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-1.5">
+                            {!isCover && <button type="button" onClick={() => makeCover(url)} className="text-[10px] bg-white/90 text-black rounded px-1.5 py-0.5">Set cover</button>}
+                            <button type="button" onClick={() => removeImage(url)} className="text-[10px] bg-destructive text-destructive-foreground rounded px-1.5 py-0.5">Remove</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-4 gap-3">
                 {(["children", "regular", "vip", "vvip"] as const).map((t) => (
@@ -180,9 +221,9 @@ function AdminEvents() {
                 <ResponsiveContainer>
                   <PieChart>
                     <Pie data={overview.statusData} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
-                      {overview.statusData.map((s, i) => <Cell key={i} fill={STATUS_COLORS[s.name] ?? "hsl(var(--primary))"} />)}
+                      {overview.statusData.map((s, i) => <Cell key={i} fill={STATUS_COLORS[s.name] ?? "var(--color-primary)"} />)}
                     </Pie>
-                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                    <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -193,11 +234,11 @@ function AdminEvents() {
               <div className="h-56">
                 <ResponsiveContainer>
                   <BarChart data={overview.topRevenue}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={10} />
-                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
-                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
-                    <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                    <XAxis dataKey="name" stroke="var(--color-muted-foreground)" fontSize={10} />
+                    <YAxis stroke="var(--color-muted-foreground)" fontSize={11} />
+                    <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
+                    <Bar dataKey="revenue" fill="var(--color-primary)" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

@@ -154,13 +154,8 @@ function EventDetail() {
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="aspect-[16/9] surface-card rounded-2xl overflow-hidden mb-6">
-              {event.poster_url ? (
-                <img src={event.poster_url} alt={event.title} className="h-full w-full object-cover" />
-              ) : (
-                <div className="h-full w-full bg-gradient-to-br from-primary/20 to-accent/10" />
-              )}
-            </div>
+            <EventGallery cover={event.poster_url} urls={event.poster_urls ?? []} title={event.title} />
+
             <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight">{event.title}</h1>
             <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-1.5"><Calendar className="h-4 w-4 text-primary" />{format(new Date(event.event_date), "EEEE, MMM d, yyyy · h:mm a")}</span>
@@ -281,6 +276,38 @@ function EventDetail() {
         </DialogContent>
       </Dialog>
     </Layout>
+  );
+}
+
+function EventGallery({ cover, urls, title }: { cover: string | null; urls: string[]; title: string }) {
+  const all = Array.from(new Set([cover, ...urls].filter(Boolean) as string[]));
+  const [active, setActive] = useState(all[0] ?? "");
+  useEffect(() => { if (all[0]) setActive(all[0]); /* eslint-disable-next-line */ }, [cover, urls.join("|")]);
+  if (all.length === 0) {
+    return (
+      <div className="aspect-[16/9] surface-card rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary/20 to-accent/10" />
+    );
+  }
+  return (
+    <div className="mb-6">
+      <div className="aspect-[16/9] surface-card rounded-2xl overflow-hidden">
+        <img src={active} alt={title} className="h-full w-full object-cover" />
+      </div>
+      {all.length > 1 && (
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+          {all.map((u) => (
+            <button
+              key={u}
+              type="button"
+              onClick={() => setActive(u)}
+              className={`shrink-0 rounded-lg overflow-hidden border-2 transition ${active === u ? "border-primary" : "border-transparent opacity-70 hover:opacity-100"}`}
+            >
+              <img src={u} alt="" className="h-16 w-24 object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
