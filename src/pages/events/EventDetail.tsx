@@ -154,13 +154,8 @@ function EventDetail() {
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="aspect-[16/9] surface-card rounded-2xl overflow-hidden mb-6">
-              {event.poster_url ? (
-                <img src={event.poster_url} alt={event.title} className="h-full w-full object-cover" />
-              ) : (
-                <div className="h-full w-full bg-gradient-to-br from-primary/20 to-accent/10" />
-              )}
-            </div>
+            <EventGallery cover={event.poster_url} urls={event.poster_urls ?? []} title={event.title} />
+          </div>
             <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight">{event.title}</h1>
             <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-1.5"><Calendar className="h-4 w-4 text-primary" />{format(new Date(event.event_date), "EEEE, MMM d, yyyy · h:mm a")}</span>
