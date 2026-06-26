@@ -158,9 +158,25 @@ function AdminEvents() {
                 <div><Label>Venue</Label><Input required value={form.venue} onChange={(e) => setForm({ ...form, venue: e.target.value })} /></div>
               </div>
               <div>
-                <Label>Poster image</Label>
-                <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])} />
-                {form.poster_url && <img src={form.poster_url} alt="poster" className="mt-2 h-20 rounded-lg object-cover" />}
+                <Label>Event images <span className="text-xs text-muted-foreground font-normal">(add one or more)</span></Label>
+                <Input type="file" accept="image/*" multiple onChange={(e) => e.target.files?.length && handleUpload(e.target.files)} />
+                {form.poster_urls?.length > 0 && (
+                  <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {form.poster_urls.map((url: string) => {
+                      const isCover = url === form.poster_url;
+                      return (
+                        <div key={url} className="relative group rounded-lg overflow-hidden border border-border">
+                          <img src={url} alt="event" className="h-20 w-full object-cover" />
+                          {isCover && <span className="absolute top-1 left-1 text-[9px] font-semibold uppercase bg-primary text-primary-foreground px-1.5 py-0.5 rounded">Cover</span>}
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-1.5">
+                            {!isCover && <button type="button" onClick={() => makeCover(url)} className="text-[10px] bg-white/90 text-black rounded px-1.5 py-0.5">Set cover</button>}
+                            <button type="button" onClick={() => removeImage(url)} className="text-[10px] bg-destructive text-destructive-foreground rounded px-1.5 py-0.5">Remove</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-4 gap-3">
                 {(["children", "regular", "vip", "vvip"] as const).map((t) => (
