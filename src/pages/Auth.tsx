@@ -139,7 +139,7 @@ function Auth() {
             </div>
             <span className="font-display text-xl font-bold drop-shadow-lg">Heza Ticketing</span>
           </div>
-          <div className="space-y-4 max-w-md">
+          <div className="space-y-4 max-w-2xl">
             <h2 className="font-display text-4xl xl:text-5xl font-bold leading-[1.05] drop-shadow-2xl">
               Your next unforgettable event is one tap away.
             </h2>
@@ -169,7 +169,7 @@ function Auth() {
               />
               <div className="relative rounded-[1.5rem] border-2 border-primary/40 bg-card shadow-2xl px-6 pt-8 pb-7 sm:px-9 sm:pt-10 sm:pb-9">
                 {/* Logo inside the card */}
-                <div className="flex flex-col items-center mb-7">
+                <div className="flex flex-col items-center mb-3">
                   <div className="h-16 w-16 rounded-2xl bg-primary/15 shadow-lg flex items-center justify-center mb-3 ring-2 ring-primary/40">
                     <img src={logo} alt="Heza Ticketing" className="h-14 w-14 rounded-lg" />
                   </div>
@@ -179,7 +179,6 @@ function Auth() {
                 </div>
 
                 <div className="mb-6 text-center">
-                <h1 className="font-display text-xl font-bold tracking-tight">Welcome back</h1>
                 <p className="mt-1.5 text-sm text-muted-foreground">Sign in or create your account to book tickets.</p>
               </div>
 
