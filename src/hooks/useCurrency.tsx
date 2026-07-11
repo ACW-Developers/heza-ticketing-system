@@ -23,7 +23,7 @@ interface Ctx {
 const CurrencyContext = createContext<Ctx | undefined>(undefined);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrencyState] = useState<CurrencyCode>("USD");
+  const [currency, setCurrencyState] = useState<CurrencyCode>("KES");
 
   useEffect(() => {
     const stored = (typeof window !== "undefined" && localStorage.getItem(KEY)) as CurrencyCode | null;
