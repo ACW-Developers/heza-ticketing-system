@@ -130,7 +130,7 @@ function EventDetail() {
     setSubmitting(true);
     try {
       const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({ type: t.key, quantity: qty[t.key] }));
-      const { data, error } = await supabase.functions.invoke("checkout", {
+      const { data, error } = await supabase.functions.invoke("paystack-init", {
         body: { eventId: id, origin: window.location.origin, items, attendee: contact },
       });
       if (error) throw new Error(error.message || "Checkout failed");

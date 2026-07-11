@@ -8,16 +8,16 @@ import { toast } from "sonner";
 
 function CheckoutSuccess() {
   const [sp] = useSearchParams();
-  const session_id = sp.get("session_id") ?? "";
+  const reference = sp.get("reference") ?? sp.get("trxref") ?? sp.get("session_id") ?? "";
   const [state, setState] = useState<"verifying" | "paid" | "pending" | "error">("verifying");
   const [tickets, setTickets] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!session_id) { setState("error"); return; }
+    if (!reference) { setState("error"); return; }
     (async () => {
       try {
-        const { data, error } = await supabase.functions.invoke("verify", {
-          body: { sessionId: session_id },
+        const { data, error } = await supabase.functions.invoke("paystack-verify", {
+          body: { reference },
         });
         if (error) throw new Error(error.message);
         if (data?.error) throw new Error(data.error);
@@ -30,7 +30,7 @@ function CheckoutSuccess() {
         setState("error");
       }
     })();
-  }, [session_id]);
+  }, [reference]);
 
   return (
     <Layout>
