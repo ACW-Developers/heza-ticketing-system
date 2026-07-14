@@ -161,4 +161,14 @@
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
   }
+  /* html5-qrcode camera preview — ensure video fills the container */
+  .qr-camera-surface video {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: cover;
+  }
+  .qr-camera-surface > div {
+    width: 100% !important;
+  }
 }
