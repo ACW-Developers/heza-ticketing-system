@@ -223,7 +223,7 @@ function Auth() {
                 </div>
 
                 <Tabs defaultValue={initialTab}>
-                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50 p-1 border border-border rounded-lg">
+                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50 border border-border rounded-lg">
                     <TabsTrigger value="signin" className="w-full rounded-md">
                       Sign in
                     </TabsTrigger>

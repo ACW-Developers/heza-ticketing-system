@@ -51,14 +51,14 @@ export function Navbar() {
                 </Button>
               </Link>
               <Link to="/auth?mode=signup" className="hidden sm:block">
-  <Button
-    size="sm"
-    className="h-9 px-3 sm:px-4 rounded-full border-2 border-primary/60 shadow-md shadow-primary/20 hover:shadow-primary/40 font-semibold glow-primary"
-  >
-    <UserPlus className="h-3.5 w-3.5" />
-    Sign up
-  </Button>
-</Link>
+                <Button
+                  size="sm"
+                  className="h-9 px-3 sm:px-4 rounded-full border-2 border-primary/60 shadow-md shadow-primary/20 hover:shadow-primary/40 font-semibold glow-primary"
+                >
+                  <UserPlus className="h-3.5 w-3.5" />
+                  Sign up
+                </Button>
+              </Link>
             </div>
           )}
         </nav>
