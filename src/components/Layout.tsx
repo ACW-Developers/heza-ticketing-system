@@ -15,7 +15,7 @@ export function Layout({ children }: { children: ReactNode }) {
             href="tel:+15207361677"
             className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
           >
-            <Phone className="h-4 w-4" /> Call: +1 (520) 736-1677
+            <Phone className="h-4 w-4" /> Call/WhatsApp: +1 (520) 736-1677
           </a>
 
           <a
