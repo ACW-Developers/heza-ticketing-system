@@ -3,12 +3,30 @@ import { Logo } from "./Logo";
 import { UserMenu } from "./UserMenu";
 import { NotificationBell } from "./NotificationBell";
 import {
-  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar,
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  LayoutDashboard, CalendarDays, Users, Ticket, User as UserIcon, Settings,
-  CreditCard, Activity, BarChart3, FileText, Shield, ScanLine,
+  LayoutDashboard,
+  CalendarDays,
+  Users,
+  Ticket,
+  User as UserIcon,
+  Settings,
+  CreditCard,
+  Activity,
+  BarChart3,
+  FileText,
+  Shield,
+  ScanLine,
 } from "lucide-react";
 
 const main = [
@@ -44,7 +62,11 @@ export function AdminSidebar() {
   function Section({ label, items }: { label: string; items: typeof main }) {
     return (
       <SidebarGroup>
-        {!collapsed && <SidebarGroupLabel className="text-[10px] uppercase tracking-wider">{label}</SidebarGroupLabel>}
+        {!collapsed && (
+          <SidebarGroupLabel className="text-[10px] uppercase tracking-wider">
+            {label}
+          </SidebarGroupLabel>
+        )}
         <SidebarGroupContent>
           <SidebarMenu>
             {items.map((it) => (
@@ -93,7 +115,9 @@ export function AdminTopbar() {
       <div className="flex h-14 items-center justify-between px-4 gap-2">
         <div className="flex items-center gap-2">
           <SidebarTriggerInline />
-          <h2 className="text-sm font-medium text-muted-foreground hidden sm:block">Admin Console</h2>
+          <h2 className="text-sm font-medium text-muted-foreground hidden sm:block">
+            Admin Console
+          </h2>
         </div>
         <div className="flex items-center gap-1">
           <NotificationBell />
@@ -105,4 +129,6 @@ export function AdminTopbar() {
 }
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
-function SidebarTriggerInline() { return <SidebarTrigger />; }
+function SidebarTriggerInline() {
+  return <SidebarTrigger />;
+}

@@ -9,7 +9,7 @@ export const CURRENCIES: { code: CurrencyCode; label: string; symbol: string; lo
   { code: "TZS", label: "Tanzanian Shilling", symbol: "TSh", locale: "en-TZ" },
   { code: "EUR", label: "Euro", symbol: "€", locale: "en-IE" },
   { code: "GBP", label: "British Pound", symbol: "£", locale: "en-GB" },
-    { code: "USD", label: "US Dollar", symbol: "$", locale: "en-US" },
+  { code: "USD", label: "US Dollar", symbol: "$", locale: "en-US" },
 ];
 
 const KEY = "smarticketing.currency";
@@ -26,13 +26,16 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrencyState] = useState<CurrencyCode>("KES");
 
   useEffect(() => {
-    const stored = (typeof window !== "undefined" && localStorage.getItem(KEY)) as CurrencyCode | null;
+    const stored = (typeof window !== "undefined" &&
+      localStorage.getItem(KEY)) as CurrencyCode | null;
     if (stored && CURRENCIES.some((c) => c.code === stored)) setCurrencyState(stored);
   }, []);
 
   function setCurrency(c: CurrencyCode) {
     setCurrencyState(c);
-    try { localStorage.setItem(KEY, c); } catch {}
+    try {
+      localStorage.setItem(KEY, c);
+    } catch {}
   }
 
   function format(amount: number, opts?: { decimals?: number }) {

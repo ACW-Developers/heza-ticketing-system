@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { EventCard } from "@/components/EventCard";
@@ -27,7 +26,7 @@ function EventsPage() {
   const filtered = events.filter(
     (e) =>
       e.title.toLowerCase().includes(q.toLowerCase()) ||
-      e.venue.toLowerCase().includes(q.toLowerCase())
+      e.venue.toLowerCase().includes(q.toLowerCase()),
   );
 
   return (
@@ -35,7 +34,9 @@ function EventsPage() {
       <section className="container mx-auto px-4 pt-12 pb-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">Upcoming events</h1>
+            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+              Upcoming events
+            </h1>
             <p className="mt-2 text-muted-foreground">Find your next event.</p>
           </div>
           <RefreshButton />
@@ -53,12 +54,16 @@ function EventsPage() {
 
       <section className="container mx-auto px-4 py-8">
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div>
+          <div className="flex justify-center py-20">
+            <Loader2 className="animate-spin text-primary" />
+          </div>
         ) : filtered.length === 0 ? (
           <p className="text-center py-20 text-muted-foreground">No events found.</p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((e) => <EventCard key={e.id} event={e} />)}
+            {filtered.map((e) => (
+              <EventCard key={e.id} event={e} />
+            ))}
           </div>
         )}
       </section>

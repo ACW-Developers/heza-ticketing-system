@@ -6,10 +6,15 @@ import { corsHeaders } from "../_shared/cors.ts";
 const cartSchema = z.object({
   eventId: z.string().uuid(),
   origin: z.string().url(),
-  items: z.array(z.object({
-    type: z.enum(["children", "regular", "vip", "vvip"]),
-    quantity: z.number().int().min(1).max(20),
-  })).min(1).max(8),
+  items: z
+    .array(
+      z.object({
+        type: z.enum(["children", "regular", "vip", "vvip"]),
+        quantity: z.number().int().min(1).max(20),
+      }),
+    )
+    .min(1)
+    .max(8),
   attendee: z.object({
     name: z.string().min(2).max(100),
     email: z.string().email(),
@@ -33,7 +38,8 @@ Deno.serve(async (req) => {
     const token = auth.slice(7);
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-    const SUPABASE_ANON = Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY")!;
+    const SUPABASE_ANON =
+      Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY")!;
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON, {
       global: { headers: { Authorization: `Bearer ${token}` } },
@@ -47,7 +53,10 @@ Deno.serve(async (req) => {
     const data = cartSchema.parse(await req.json());
 
     const { data: event, error: evErr } = await supabase
-      .from("events").select("*").eq("id", data.eventId).maybeSingle();
+      .from("events")
+      .select("*")
+      .eq("id", data.eventId)
+      .maybeSingle();
     if (evErr || !event) return json({ error: "Event not found" }, 404);
 
     const priceMap: Record<string, number> = {
@@ -69,16 +78,20 @@ Deno.serve(async (req) => {
     const amountSubunit = Math.round(total * 100);
 
     const { data: order, error: oErr } = await supabase
-      .from("orders").insert({
+      .from("orders")
+      .insert({
         user_id: userId,
         event_id: data.eventId,
         total_amount: total,
         currency: currency.toLowerCase(),
         status: "pending",
-      }).select().single();
+      })
+      .select()
+      .single();
     if (oErr || !order) return json({ error: "Failed to create order" }, 500);
 
-    const reference = `ORD-${order.id.replace(/-/g, "").slice(0, 12)}-${Date.now().toString(36)}`.toUpperCase();
+    const reference =
+      `ORD-${order.id.replace(/-/g, "").slice(0, 12)}-${Date.now().toString(36)}`.toUpperCase();
 
     const payload = {
       email: data.attendee.email,

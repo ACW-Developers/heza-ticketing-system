@@ -11,8 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
-  User as UserIcon, LogOut, Ticket, LayoutDashboard, Settings,
-  CalendarDays, Sun, Moon, ChevronDown,
+  User as UserIcon,
+  LogOut,
+  Ticket,
+  LayoutDashboard,
+  Settings,
+  CalendarDays,
+  Sun,
+  Moon,
+  ChevronDown,
 } from "lucide-react";
 
 export function UserMenu() {
@@ -23,13 +30,19 @@ export function UserMenu() {
   if (!user) {
     return (
       <Link to="/auth">
-        <Button size="sm" className="glow-primary">Sign in</Button>
+        <Button size="sm" className="glow-primary">
+          Sign in
+        </Button>
       </Link>
     );
   }
 
   const initials = (user.user_metadata?.full_name ?? user.email ?? "U")
-    .split(" ").map((s: string) => s[0]).slice(0, 2).join("").toUpperCase();
+    .split(" ")
+    .map((s: string) => s[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
     <div className="flex items-center  gap-2">
@@ -54,7 +67,9 @@ export function UserMenu() {
             <div className="truncate text-sm">{user.email}</div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Quick links</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">
+            Quick links
+          </DropdownMenuLabel>
           <DropdownMenuItem onClick={() => nav("/events")}>
             <CalendarDays className="mr-2 h-4 w-4" /> Browse events
           </DropdownMenuItem>
@@ -74,7 +89,10 @@ export function UserMenu() {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={async () => { await signOut(); nav("/auth"); }}
+            onClick={async () => {
+              await signOut();
+              nav("/auth");
+            }}
             className="text-destructive focus:text-destructive"
           >
             <LogOut className="mr-2 h-4 w-4" /> Sign out

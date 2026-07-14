@@ -15,13 +15,21 @@ export function Navbar() {
         <Logo />
         <nav className="flex items-center gap-2">
           <Link to="/events" className="hidden sm:inline-flex">
-            <Button variant="ghost" size="sm" className={loc.pathname.startsWith("/events") ? "text-primary" : ""}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={loc.pathname.startsWith("/events") ? "text-primary" : ""}
+            >
               Events
             </Button>
           </Link>
           {user && (
             <Link to="/my-tickets" className="hidden sm:inline-flex">
-              <Button variant="ghost" size="sm" className={loc.pathname === "/my-tickets" ? "text-primary" : ""}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={loc.pathname === "/my-tickets" ? "text-primary" : ""}
+              >
                 My Tickets
               </Button>
             </Link>

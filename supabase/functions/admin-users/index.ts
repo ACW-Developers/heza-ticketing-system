@@ -7,7 +7,8 @@ Deno.serve(async (req) => {
 
   try {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-    const SUPABASE_ANON = Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY")!;
+    const SUPABASE_ANON =
+      Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY")!;
     const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
     const auth = req.headers.get("Authorization");
@@ -26,8 +27,12 @@ Deno.serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    const { data: roleRow } = await admin.from("user_roles")
-      .select("role").eq("user_id", requester.id).eq("role", "admin").maybeSingle();
+    const { data: roleRow } = await admin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", requester.id)
+      .eq("role", "admin")
+      .maybeSingle();
     if (!roleRow) return json({ error: "Admins only" }, 403);
 
     const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
@@ -38,8 +43,14 @@ Deno.serve(async (req) => {
       if (error) return json({ error: error.message }, 500);
       const ids = list.users.map((u) => u.id);
       const [{ data: profiles }, { data: roles }, { data: tickets }] = await Promise.all([
-        admin.from("profiles").select("*").in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]),
-        admin.from("user_roles").select("user_id, role").in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]),
+        admin
+          .from("profiles")
+          .select("*")
+          .in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]),
+        admin
+          .from("user_roles")
+          .select("user_id, role")
+          .in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]),
         admin.from("tickets").select("user_id"),
       ]);
       const pMap: Record<string, any> = {};
@@ -70,13 +81,17 @@ Deno.serve(async (req) => {
       if (enabled) {
         await admin.from("user_roles").upsert({ user_id, role }, { onConflict: "user_id,role" });
       } else {
-        if (user_id === requester.id && role === "admin") return json({ error: "Cannot remove your own admin role" }, 400);
+        if (user_id === requester.id && role === "admin")
+          return json({ error: "Cannot remove your own admin role" }, 400);
         await admin.from("user_roles").delete().eq("user_id", user_id).eq("role", role);
       }
       await admin.from("activity_logs").insert({
-        actor_id: requester.id, actor_email: requester.email,
+        actor_id: requester.id,
+        actor_email: requester.email,
         action: enabled ? "user.role.granted" : "user.role.revoked",
-        entity_type: "user", entity_id: user_id, metadata: { role },
+        entity_type: "user",
+        entity_id: user_id,
+        metadata: { role },
       });
       return json({ ok: true });
     }
@@ -87,8 +102,11 @@ Deno.serve(async (req) => {
       const { error } = await admin.auth.resetPasswordForEmail(email, { redirectTo: redirect_to });
       if (error) return json({ error: error.message }, 400);
       await admin.from("activity_logs").insert({
-        actor_id: requester.id, actor_email: requester.email,
-        action: "user.password_reset_sent", entity_type: "user", metadata: { email },
+        actor_id: requester.id,
+        actor_email: requester.email,
+        action: "user.password_reset_sent",
+        entity_type: "user",
+        metadata: { email },
       });
       return json({ ok: true });
     }
@@ -100,8 +118,11 @@ Deno.serve(async (req) => {
       const { error } = await admin.auth.admin.deleteUser(user_id);
       if (error) return json({ error: error.message }, 400);
       await admin.from("activity_logs").insert({
-        actor_id: requester.id, actor_email: requester.email,
-        action: "user.deleted", entity_type: "user", entity_id: user_id,
+        actor_id: requester.id,
+        actor_email: requester.email,
+        action: "user.deleted",
+        entity_type: "user",
+        entity_id: user_id,
       });
       return json({ ok: true });
     }
@@ -115,6 +136,7 @@ Deno.serve(async (req) => {
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
-    status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 }

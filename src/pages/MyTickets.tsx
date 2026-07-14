@@ -32,7 +32,11 @@ function MyTickets() {
       setRows(data ?? []);
       const map: Record<string, string> = {};
       for (const t of data ?? []) {
-        map[t.id] = await QRCode.toDataURL(t.ticket_number, { width: 160, margin: 1, color: { dark: "#0a0e1a", light: "#ffffff" } });
+        map[t.id] = await QRCode.toDataURL(t.ticket_number, {
+          width: 160,
+          margin: 1,
+          color: { dark: "#0a0e1a", light: "#ffffff" },
+        });
       }
       setQrs(map);
       setBusy(false);
@@ -71,7 +75,14 @@ function MyTickets() {
     }
   }
 
-  if (busy) return <Layout><div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div></Layout>;
+  if (busy)
+    return (
+      <Layout>
+        <div className="flex justify-center py-20">
+          <Loader2 className="animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
 
   return (
     <Layout>
@@ -80,14 +91,19 @@ function MyTickets() {
         <p className="text-muted-foreground mb-8">Your QR is your entry. Show it at the door.</p>
         {rows.length === 0 ? (
           <div className="surface-card rounded-2xl p-10 text-center text-muted-foreground">
-            No tickets yet. <Link to="/events" className="text-primary">Browse events</Link>
+            No tickets yet.{" "}
+            <Link to="/events" className="text-primary">
+              Browse events
+            </Link>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 gap-6">
             {rows.map((t) => (
               <div key={t.id} className="space-y-2">
                 <div
-                  ref={(el) => { ticketRefs.current[t.id] = el; }}
+                  ref={(el) => {
+                    ticketRefs.current[t.id] = el;
+                  }}
                   className="ticket-card relative flex flex-col min-[420px]:flex-row rounded-2xl overflow-hidden shadow-xl bg-white text-neutral-900 w-full"
                   style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
                 >
@@ -112,14 +128,21 @@ function MyTickets() {
 
                     <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
                       <div className="min-w-0">
-                        <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Date</div>
+                        <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">
+                          Date
+                        </div>
                         <div className="mt-1 flex items-center gap-1.5 text-neutral-800 font-medium">
                           <Calendar className="h-3.5 w-3.5 text-neutral-500 shrink-0" />
-                          <span className="truncate">{t.events?.event_date && format(new Date(t.events.event_date), "MMM d, yyyy · h:mm a")}</span>
+                          <span className="truncate">
+                            {t.events?.event_date &&
+                              format(new Date(t.events.event_date), "MMM d, yyyy · h:mm a")}
+                          </span>
                         </div>
                       </div>
                       <div className="min-w-0">
-                        <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Venue</div>
+                        <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">
+                          Venue
+                        </div>
                         <div className="mt-1 flex items-center gap-1.5 text-neutral-800 font-medium">
                           <MapPin className="h-3.5 w-3.5 text-neutral-500 shrink-0" />
                           <span className="truncate">{t.events?.venue}</span>
@@ -127,15 +150,23 @@ function MyTickets() {
                       </div>
                       {t.attendee_name && (
                         <div className="col-span-2 min-w-0">
-                          <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Attendee</div>
-                          <div className="mt-1 text-neutral-800 font-medium truncate">{t.attendee_name}</div>
+                          <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">
+                            Attendee
+                          </div>
+                          <div className="mt-1 text-neutral-800 font-medium truncate">
+                            {t.attendee_name}
+                          </div>
                         </div>
                       )}
                     </div>
 
                     <div className="mt-5 pt-3 border-t border-dashed border-neutral-200">
-                      <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Ticket No.</div>
-                      <div className="mt-0.5 font-mono text-[11px] text-neutral-700 break-all">{t.ticket_number}</div>
+                      <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">
+                        Ticket No.
+                      </div>
+                      <div className="mt-0.5 font-mono text-[11px] text-neutral-700 break-all">
+                        {t.ticket_number}
+                      </div>
                     </div>
                   </div>
 
@@ -148,8 +179,12 @@ function MyTickets() {
 
                   {/* QR stub */}
                   <div className="w-full min-[420px]:w-36 shrink-0 bg-neutral-50 p-3 flex flex-col items-center justify-center border-t min-[420px]:border-t-0 border-dashed border-neutral-200">
-                    {qrs[t.id] && <img src={qrs[t.id]} alt="QR" className="w-32 min-[420px]:w-full" />}
-                    <span className="mt-1.5 text-[9px] uppercase tracking-[0.15em] text-neutral-500 font-semibold">Scan at entry</span>
+                    {qrs[t.id] && (
+                      <img src={qrs[t.id]} alt="QR" className="w-32 min-[420px]:w-full" />
+                    )}
+                    <span className="mt-1.5 text-[9px] uppercase tracking-[0.15em] text-neutral-500 font-semibold">
+                      Scan at entry
+                    </span>
                   </div>
                 </div>
 

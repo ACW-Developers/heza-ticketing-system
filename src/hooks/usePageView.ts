@@ -19,7 +19,10 @@ export function usePageView(extra?: { event_id?: string | null }) {
         language: (navigator.language || "").slice(0, 12),
         country: null,
       };
-      supabase.from("page_views").insert(payload as any).then(() => {});
+      supabase
+        .from("page_views")
+        .insert(payload as any)
+        .then(() => {});
     } catch {
       /* ignore */
     }

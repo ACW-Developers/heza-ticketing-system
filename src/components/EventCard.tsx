@@ -22,7 +22,11 @@ export function EventCard({ event }: { event: EventCardData }) {
     >
       <div className="aspect-[16/10] bg-muted relative overflow-hidden">
         {event.poster_url ? (
-          <img src={event.poster_url} alt={event.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <img
+            src={event.poster_url}
+            alt={event.title}
+            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-primary/20 via-accent/10 to-transparent flex items-center justify-center">
             <Calendar className="h-12 w-12 text-primary/40" />

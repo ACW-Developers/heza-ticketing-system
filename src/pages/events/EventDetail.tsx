@@ -5,8 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrency } from "@/hooks/useCurrency";
@@ -22,14 +35,19 @@ const TYPES = [
 ] as const;
 
 function EventDetail() {
-  const { id } = useParams() as Record<string,string>;
+  const { id } = useParams() as Record<string, string>;
   const { user } = useAuth();
   const { format: fmt } = useCurrency();
   const nav = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [qty, setQty] = useState<Record<string, number>>({ children: 0, regular: 0, vip: 0, vvip: 0 });
+  const [qty, setQty] = useState<Record<string, number>>({
+    children: 0,
+    regular: 0,
+    vip: 0,
+    vvip: 0,
+  });
   const [submitting, setSubmitting] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [contact, setContact] = useState({
@@ -44,10 +62,15 @@ function EventDetail() {
   });
 
   useEffect(() => {
-    supabase.from("events").select("*").eq("id", id).maybeSingle().then(({ data }) => {
-      setEvent(data);
-      setLoading(false);
-    });
+    supabase
+      .from("events")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle()
+      .then(({ data }) => {
+        setEvent(data);
+        setLoading(false);
+      });
   }, [id]);
 
   // Prefill contact from profile
@@ -61,7 +84,11 @@ function EventDetail() {
       name: c.name || (user.user_metadata?.full_name as string | undefined) || "",
       phone: c.phone || (user.user_metadata?.phone as string | undefined) || "",
     }));
-    supabase.from("profiles").select("full_name, phone, email").eq("user_id", user.id).maybeSingle()
+    supabase
+      .from("profiles")
+      .select("full_name, phone, email")
+      .eq("user_id", user.id)
+      .maybeSingle()
       .then(({ data }) => {
         setContact((c) => ({
           ...c,
@@ -72,8 +99,12 @@ function EventDetail() {
       });
   }, [user]);
 
-  function priceFor(t: string) { return Number(event?.[`price_${t}`] ?? 0); }
-  function maxFor(t: string) { return Number(event?.[`qty_${t}`] ?? 0); }
+  function priceFor(t: string) {
+    return Number(event?.[`price_${t}`] ?? 0);
+  }
+  function maxFor(t: string) {
+    return Number(event?.[`qty_${t}`] ?? 0);
+  }
   const total = TYPES.reduce((s, t) => s + qty[t.key] * priceFor(t.key), 0);
   const totalQty = Object.values(qty).reduce((a, b) => a + b, 0);
 
@@ -129,7 +160,10 @@ function EventDetail() {
     if (!contact.agree) return toast.error("Please accept the terms to continue");
     setSubmitting(true);
     try {
-      const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({ type: t.key, quantity: qty[t.key] }));
+      const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({
+        type: t.key,
+        quantity: qty[t.key],
+      }));
       const { data, error } = await supabase.functions.invoke("paystack-init", {
         body: { eventId: id, origin: window.location.origin, items, attendee: contact },
       });
@@ -142,26 +176,57 @@ function EventDetail() {
     }
   }
 
-  if (loading) return <Layout><div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div></Layout>;
-  if (!event) return <Layout><div className="container mx-auto px-4 py-20 text-center">Event not found.</div></Layout>;
+  if (loading)
+    return (
+      <Layout>
+        <div className="flex justify-center py-20">
+          <Loader2 className="animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  if (!event)
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-20 text-center">Event not found.</div>
+      </Layout>
+    );
 
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <Link to="/events" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-6">
+        <Link
+          to="/events"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-6"
+        >
           <ArrowLeft className="mr-1 h-4 w-4" /> All events
         </Link>
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <EventGallery cover={event.poster_url} urls={event.poster_urls ?? []} title={event.title} />
+            <EventGallery
+              cover={event.poster_url}
+              urls={event.poster_urls ?? []}
+              title={event.title}
+            />
 
-            <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight">{event.title}</h1>
+            <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight">
+              {event.title}
+            </h1>
             <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5"><Calendar className="h-4 w-4 text-primary" />{format(new Date(event.event_date), "EEEE, MMM d, yyyy · h:mm a")}</span>
-              <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4 text-primary" />{event.venue}</span>
+              <span className="inline-flex items-center gap-1.5">
+                <Calendar className="h-4 w-4 text-primary" />
+                {format(new Date(event.event_date), "EEEE, MMM d, yyyy · h:mm a")}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-4 w-4 text-primary" />
+                {event.venue}
+              </span>
             </div>
-            {event.description && <p className="mt-6 text-base text-muted-foreground whitespace-pre-line leading-relaxed">{event.description}</p>}
+            {event.description && (
+              <p className="mt-6 text-base text-muted-foreground whitespace-pre-line leading-relaxed">
+                {event.description}
+              </p>
+            )}
           </div>
 
           <aside className="lg:col-span-1">
@@ -173,7 +238,10 @@ function EventDetail() {
                   const max = maxFor(t.key);
                   const available = price > 0 && max > 0;
                   return (
-                    <div key={t.key} className={`rounded-xl border border-border p-3 ${!available ? "opacity-50" : ""}`}>
+                    <div
+                      key={t.key}
+                      className={`rounded-xl border border-border p-3 ${!available ? "opacity-50" : ""}`}
+                    >
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <div className="font-semibold">{t.label}</div>
@@ -182,11 +250,29 @@ function EventDetail() {
                         <div className="font-display text-lg">{fmt(price, { decimals: 0 })}</div>
                       </div>
                       <div className="mt-2 flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">{available ? `${max} max` : "Unavailable"}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {available ? `${max} max` : "Unavailable"}
+                        </span>
                         <div className="flex items-center gap-2">
-                          <Button size="icon" variant="outline" className="h-8 w-8" disabled={!available || qty[t.key] === 0} onClick={() => bump(t.key, -1)}><Minus className="h-3.5 w-3.5" /></Button>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-8 w-8"
+                            disabled={!available || qty[t.key] === 0}
+                            onClick={() => bump(t.key, -1)}
+                          >
+                            <Minus className="h-3.5 w-3.5" />
+                          </Button>
                           <span className="w-6 text-center font-semibold">{qty[t.key]}</span>
-                          <Button size="icon" variant="outline" className="h-8 w-8" disabled={!available || qty[t.key] >= max} onClick={() => bump(t.key, 1)}><Plus className="h-3.5 w-3.5" /></Button>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-8 w-8"
+                            disabled={!available || qty[t.key] >= max}
+                            onClick={() => bump(t.key, 1)}
+                          >
+                            <Plus className="h-3.5 w-3.5" />
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -199,12 +285,18 @@ function EventDetail() {
                 <span className="font-display text-2xl font-bold">{fmt(total)}</span>
               </div>
 
-              <Button className="w-full mt-4 glow-primary h-11" disabled={submitting || totalQty === 0} onClick={startCheckout}>
+              <Button
+                className="w-full mt-4 glow-primary h-11"
+                disabled={submitting || totalQty === 0}
+                onClick={startCheckout}
+              >
                 {user ? "Continue to checkout" : "Sign in to checkout"}
               </Button>
               <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-2.5 text-center">
                 <p className="text-xs font-semibold text-foreground">Pay with M-Pesa</p>
-                <p className="text-[10px] text-muted-foreground">Secure checkout powered by Paystack · Cards & Mobile Money</p>
+                <p className="text-[10px] text-muted-foreground">
+                  Secure checkout powered by Paystack · Cards & Mobile Money
+                </p>
               </div>
             </div>
           </aside>
@@ -223,31 +315,59 @@ function EventDetail() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="c-name">Full name *</Label>
-                <Input id="c-name" value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} />
+                <Input
+                  id="c-name"
+                  value={contact.name}
+                  onChange={(e) => setContact({ ...contact, name: e.target.value })}
+                />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="c-phone">Phone *</Label>
-                <Input id="c-phone" type="tel" value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} />
+                <Input
+                  id="c-phone"
+                  type="tel"
+                  value={contact.phone}
+                  onChange={(e) => setContact({ ...contact, phone: e.target.value })}
+                />
               </div>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="c-email">Email *</Label>
-              <Input id="c-email" type="email" value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} />
+              <Input
+                id="c-email"
+                type="email"
+                value={contact.email}
+                onChange={(e) => setContact({ ...contact, email: e.target.value })}
+              />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="c-id">National ID / Passport *</Label>
-                <Input id="c-id" value={contact.id_number} onChange={(e) => setContact({ ...contact, id_number: e.target.value })} />
+                <Input
+                  id="c-id"
+                  value={contact.id_number}
+                  onChange={(e) => setContact({ ...contact, id_number: e.target.value })}
+                />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="c-country">Country *</Label>
-                <Input id="c-country" value={contact.country} onChange={(e) => setContact({ ...contact, country: e.target.value })} placeholder="e.g. Rwanda" />
+                <Input
+                  id="c-country"
+                  value={contact.country}
+                  onChange={(e) => setContact({ ...contact, country: e.target.value })}
+                  placeholder="e.g. Rwanda"
+                />
               </div>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="c-gender">Gender</Label>
-              <Select value={contact.gender} onValueChange={(v) => setContact({ ...contact, gender: v })}>
-                <SelectTrigger id="c-gender"><SelectValue placeholder="Select (optional)" /></SelectTrigger>
+              <Select
+                value={contact.gender}
+                onValueChange={(v) => setContact({ ...contact, gender: v })}
+              >
+                <SelectTrigger id="c-gender">
+                  <SelectValue placeholder="Select (optional)" />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="female">Female</SelectItem>
                   <SelectItem value="male">Male</SelectItem>
@@ -258,7 +378,13 @@ function EventDetail() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="c-notes">Special requests (optional)</Label>
-              <Textarea id="c-notes" rows={2} value={contact.notes} onChange={(e) => setContact({ ...contact, notes: e.target.value })} placeholder="Accessibility needs, dietary, etc." />
+              <Textarea
+                id="c-notes"
+                rows={2}
+                value={contact.notes}
+                onChange={(e) => setContact({ ...contact, notes: e.target.value })}
+                placeholder="Accessibility needs, dietary, etc."
+              />
             </div>
             <label className="flex items-start gap-2 text-xs text-muted-foreground pt-1">
               <input
@@ -267,11 +393,15 @@ function EventDetail() {
                 checked={contact.agree}
                 onChange={(e) => setContact({ ...contact, agree: e.target.checked })}
               />
-              <span>I confirm the details are correct and accept the event terms and refund policy.</span>
+              <span>
+                I confirm the details are correct and accept the event terms and refund policy.
+              </span>
             </label>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setContactOpen(false)} disabled={submitting}>Cancel</Button>
+            <Button variant="outline" onClick={() => setContactOpen(false)} disabled={submitting}>
+              Cancel
+            </Button>
             <Button onClick={confirmCheckout} disabled={submitting} className="glow-primary">
               {submitting ? <Loader2 className="animate-spin h-4 w-4" /> : `Pay ${fmt(total)}`}
             </Button>
@@ -282,10 +412,20 @@ function EventDetail() {
   );
 }
 
-function EventGallery({ cover, urls, title }: { cover: string | null; urls: string[]; title: string }) {
+function EventGallery({
+  cover,
+  urls,
+  title,
+}: {
+  cover: string | null;
+  urls: string[];
+  title: string;
+}) {
   const all = Array.from(new Set([cover, ...urls].filter(Boolean) as string[]));
   const [active, setActive] = useState(all[0] ?? "");
-  useEffect(() => { if (all[0]) setActive(all[0]); /* eslint-disable-next-line */ }, [cover, urls.join("|")]);
+  useEffect(() => {
+    if (all[0]) setActive(all[0]); /* eslint-disable-next-line */
+  }, [cover, urls.join("|")]);
   if (all.length === 0) {
     return (
       <div className="aspect-[16/9] surface-card rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary/20 to-accent/10" />

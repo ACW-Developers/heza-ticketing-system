@@ -19,13 +19,18 @@ export function PageViewTracker() {
         event_id,
         referrer: document.referrer || null,
         user_agent: navigator.userAgent.slice(0, 500),
-        device: (ua.device.type || "desktop"),
+        device: ua.device.type || "desktop",
         browser: ua.browser.name || "Unknown",
         os: ua.os.name || "Unknown",
         language: (navigator.language || "").slice(0, 12),
       };
-      supabase.from("page_views").insert(payload as any).then(() => {});
-    } catch { /* ignore */ }
+      supabase
+        .from("page_views")
+        .insert(payload as any)
+        .then(() => {});
+    } catch {
+      /* ignore */
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loc.pathname]);
   return null;

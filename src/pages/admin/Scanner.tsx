@@ -4,11 +4,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  ScanLine, Camera, Keyboard, CheckCircle2, XCircle, AlertCircle, Search,
-  UserCheck, Loader2, RefreshCw, Calendar,
+  ScanLine,
+  Camera,
+  Keyboard,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  Search,
+  UserCheck,
+  Loader2,
+  RefreshCw,
+  Calendar,
 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -35,7 +50,10 @@ function Scanner() {
 
   // Load events
   useEffect(() => {
-    supabase.from("events").select("id, title, event_date").order("event_date", { ascending: false })
+    supabase
+      .from("events")
+      .select("id, title, event_date")
+      .order("event_date", { ascending: false })
       .then(({ data }) => {
         setEvents(data ?? []);
         if (data?.[0]) setEventId(data[0].id);
@@ -51,7 +69,9 @@ function Scanner() {
       checkedIn: (data ?? []).filter((t) => t.checked_in).length,
     });
   }
-  useEffect(() => { loadStats(eventId); }, [eventId]);
+  useEffect(() => {
+    loadStats(eventId);
+  }, [eventId]);
 
   // Keep manual input focused for hardware scanners
   useEffect(() => {
@@ -68,13 +88,21 @@ function Scanner() {
     if (tab !== "camera") stopCamera();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
-  useEffect(() => () => { stopCamera(); }, []);
+  useEffect(
+    () => () => {
+      stopCamera();
+    },
+    [],
+  );
 
   async function startCamera() {
     try {
       await stopCamera();
       const el = document.getElementById("qr-camera");
-      if (!el) { toast.error("Camera surface not ready"); return; }
+      if (!el) {
+        toast.error("Camera surface not ready");
+        return;
+      }
       if (!navigator.mediaDevices?.getUserMedia) {
         toast.error("Camera not supported on this browser");
         return;
@@ -91,7 +119,8 @@ function Scanner() {
       } catch {
         const cams = await Html5Qrcode.getCameras();
         if (!cams?.length) throw new Error("No camera devices found");
-        const back = cams.find((c) => /back|rear|environment/i.test(c.label)) ?? cams[cams.length - 1];
+        const back =
+          cams.find((c) => /back|rear|environment/i.test(c.label)) ?? cams[cams.length - 1];
         await sc.start(back.id, config, onDecode, onErr);
       }
       setScannerActive(true);
@@ -108,8 +137,18 @@ function Scanner() {
     const sc = scannerRef.current;
     scannerRef.current = null;
     setScannerActive(false);
-    try { if (sc && (sc as any).isScanning) { await sc.stop(); } } catch { /* */ }
-    try { await sc?.clear(); } catch { /* */ }
+    try {
+      if (sc && (sc as any).isScanning) {
+        await sc.stop();
+      }
+    } catch {
+      /* */
+    }
+    try {
+      await sc?.clear();
+    } catch {
+      /* */
+    }
   }
 
   async function handleScan(rawCode: string) {
@@ -162,14 +201,19 @@ function Scanner() {
       .from("tickets")
       .select("*")
       .eq("event_id", eventId)
-      .or(`attendee_name.ilike.${q},attendee_email.ilike.${q},attendee_phone.ilike.${q},id_number.ilike.${q},ticket_number.ilike.${q}`)
+      .or(
+        `attendee_name.ilike.${q},attendee_email.ilike.${q},attendee_phone.ilike.${q},id_number.ilike.${q},ticket_number.ilike.${q}`,
+      )
       .limit(20);
     setSearchResults(data ?? []);
     if (!data?.length) toast.error("No attendee matched on this event");
   }
 
   async function checkInById(t: any) {
-    if (t.checked_in) { toast.info("Already checked in"); return; }
+    if (t.checked_in) {
+      toast.info("Already checked in");
+      return;
+    }
     const { data } = await supabase
       .from("tickets")
       .update({ checked_in: true, checked_in_at: new Date().toISOString() })
@@ -188,20 +232,30 @@ function Scanner() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-display text-3xl font-bold flex items-center gap-2"><ScanLine className="h-7 w-7 text-primary" /> Ticket scanner</h1>
+          <h1 className="font-display text-3xl font-bold flex items-center gap-2">
+            <ScanLine className="h-7 w-7 text-primary" /> Ticket scanner
+          </h1>
           <p className="text-sm text-muted-foreground">Verify and check in attendees at the door</p>
         </div>
         <div className="flex items-end gap-2">
           <div>
             <Label className="text-xs">Event</Label>
             <Select value={eventId} onValueChange={setEventId}>
-              <SelectTrigger className="h-10 min-w-[220px]"><SelectValue placeholder="Pick event" /></SelectTrigger>
-              <SelectContent>{events.map((e) => (
-                <SelectItem key={e.id} value={e.id}>{e.title}</SelectItem>
-              ))}</SelectContent>
+              <SelectTrigger className="h-10 min-w-[220px]">
+                <SelectValue placeholder="Pick event" />
+              </SelectTrigger>
+              <SelectContent>
+                {events.map((e) => (
+                  <SelectItem key={e.id} value={e.id}>
+                    {e.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
-          <Button variant="outline" size="icon" onClick={() => loadStats(eventId)}><RefreshCw className="h-4 w-4" /></Button>
+          <Button variant="outline" size="icon" onClick={() => loadStats(eventId)}>
+            <RefreshCw className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
@@ -210,18 +264,29 @@ function Scanner() {
           <div>
             <div className="text-xs uppercase text-muted-foreground">Event</div>
             <div className="font-semibold">{event.title}</div>
-            <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><Calendar className="h-3 w-3" />{format(new Date(event.event_date), "MMM d, yyyy · h:mm a")}</div>
+            <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+              <Calendar className="h-3 w-3" />
+              {format(new Date(event.event_date), "MMM d, yyyy · h:mm a")}
+            </div>
           </div>
           <div>
             <div className="text-xs uppercase text-muted-foreground">Checked in</div>
-            <div className="font-display text-3xl font-bold">{stats.checkedIn}<span className="text-base text-muted-foreground"> / {stats.total}</span></div>
+            <div className="font-display text-3xl font-bold">
+              {stats.checkedIn}
+              <span className="text-base text-muted-foreground"> / {stats.total}</span>
+            </div>
             <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
-              <div className="h-full bg-primary" style={{ width: `${stats.total ? (stats.checkedIn / stats.total) * 100 : 0}%` }} />
+              <div
+                className="h-full bg-primary"
+                style={{ width: `${stats.total ? (stats.checkedIn / stats.total) * 100 : 0}%` }}
+              />
             </div>
           </div>
           <div>
             <div className="text-xs uppercase text-muted-foreground">Remaining</div>
-            <div className="font-display text-3xl font-bold">{Math.max(0, stats.total - stats.checkedIn)}</div>
+            <div className="font-display text-3xl font-bold">
+              {Math.max(0, stats.total - stats.checkedIn)}
+            </div>
           </div>
         </div>
       )}
@@ -230,14 +295,35 @@ function Scanner() {
         <div className="surface-card rounded-2xl p-5 space-y-4">
           <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
             <TabsList className="grid grid-cols-3 w-full">
-              <TabsTrigger value="scanner"><Keyboard className="h-4 w-4 mr-1.5" />Hardware</TabsTrigger>
-              <TabsTrigger value="camera"><Camera className="h-4 w-4 mr-1.5" />Camera</TabsTrigger>
-              <TabsTrigger value="search"><Search className="h-4 w-4 mr-1.5" />Search</TabsTrigger>
+              <TabsTrigger value="scanner">
+                <Keyboard className="h-4 w-4 mr-1.5" />
+                Hardware
+              </TabsTrigger>
+              <TabsTrigger value="camera">
+                <Camera className="h-4 w-4 mr-1.5" />
+                Camera
+              </TabsTrigger>
+              <TabsTrigger value="search">
+                <Search className="h-4 w-4 mr-1.5" />
+                Search
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="scanner" className="space-y-3 pt-4">
-              <p className="text-xs text-muted-foreground">Plug in your USB / Bluetooth scanner and scan a ticket. You can also type a code and press Enter.</p>
-              <form onSubmit={(e) => { e.preventDefault(); if (manual.trim()) { verifyTicket(manual.trim()); setManual(""); } }} className="flex gap-2">
+              <p className="text-xs text-muted-foreground">
+                Plug in your USB / Bluetooth scanner and scan a ticket. You can also type a code and
+                press Enter.
+              </p>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (manual.trim()) {
+                    verifyTicket(manual.trim());
+                    setManual("");
+                  }
+                }}
+                className="flex gap-2"
+              >
                 <Input
                   ref={manualInputRef}
                   autoFocus
@@ -249,12 +335,16 @@ function Scanner() {
                 <Button type="submit">Verify</Button>
               </form>
               <div className="rounded-lg border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
-                <Keyboard className="h-6 w-6 mx-auto mb-2 opacity-60" /> Keep this tab focused. Scanner input lands here automatically.
+                <Keyboard className="h-6 w-6 mx-auto mb-2 opacity-60" /> Keep this tab focused.
+                Scanner input lands here automatically.
               </div>
             </TabsContent>
 
             <TabsContent value="camera" className="pt-4 space-y-3">
-              <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ minHeight: 260 }}>
+              <div
+                className="relative w-full rounded-xl overflow-hidden bg-black"
+                style={{ minHeight: 260 }}
+              >
                 <div
                   id="qr-camera"
                   className="qr-camera-surface w-full"
@@ -268,38 +358,70 @@ function Scanner() {
               </div>
               <div className="flex gap-2">
                 {!scannerActive ? (
-                  <Button onClick={startCamera} className="flex-1"><Camera className="h-4 w-4 mr-1.5" /> Start camera</Button>
+                  <Button onClick={startCamera} className="flex-1">
+                    <Camera className="h-4 w-4 mr-1.5" /> Start camera
+                  </Button>
                 ) : (
-                  <Button variant="outline" onClick={stopCamera} className="flex-1">Stop camera</Button>
+                  <Button variant="outline" onClick={stopCamera} className="flex-1">
+                    Stop camera
+                  </Button>
                 )}
               </div>
               <p className="text-xs text-muted-foreground text-center">
-                {scannerActive ? "Point the rear camera at the QR code on the ticket" : "Tap Start camera. Your browser will ask for permission."}
+                {scannerActive
+                  ? "Point the rear camera at the QR code on the ticket"
+                  : "Tap Start camera. Your browser will ask for permission."}
               </p>
             </TabsContent>
 
             <TabsContent value="search" className="space-y-3 pt-4">
-              <p className="text-xs text-muted-foreground">If a ticket fails to scan, search the attendee in this event's guest list.</p>
-              <form onSubmit={(e) => { e.preventDefault(); runSearch(); }} className="flex gap-2">
-                <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Name, email, phone, ID, ticket #" />
-                <Button type="submit"><Search className="h-4 w-4" /></Button>
+              <p className="text-xs text-muted-foreground">
+                If a ticket fails to scan, search the attendee in this event's guest list.
+              </p>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  runSearch();
+                }}
+                className="flex gap-2"
+              >
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Name, email, phone, ID, ticket #"
+                />
+                <Button type="submit">
+                  <Search className="h-4 w-4" />
+                </Button>
               </form>
               <div className="max-h-72 overflow-y-auto divide-y divide-border rounded-lg border border-border">
                 {searchResults.map((t) => (
                   <div key={t.id} className="flex items-center justify-between p-3 gap-2">
                     <div className="min-w-0">
                       <div className="font-semibold truncate">{t.attendee_name || "(no name)"}</div>
-                      <div className="text-xs text-muted-foreground truncate">{t.attendee_email} · {t.attendee_phone}</div>
-                      <div className="text-[10px] font-mono text-muted-foreground">{t.ticket_number} · {t.ticket_type}</div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        {t.attendee_email} · {t.attendee_phone}
+                      </div>
+                      <div className="text-[10px] font-mono text-muted-foreground">
+                        {t.ticket_number} · {t.ticket_type}
+                      </div>
                     </div>
                     {t.checked_in ? (
-                      <span className="inline-flex items-center gap-1 text-xs text-success rounded-full bg-success/10 px-2 py-1"><CheckCircle2 className="h-3 w-3" /> In</span>
+                      <span className="inline-flex items-center gap-1 text-xs text-success rounded-full bg-success/10 px-2 py-1">
+                        <CheckCircle2 className="h-3 w-3" /> In
+                      </span>
                     ) : (
-                      <Button size="sm" onClick={() => checkInById(t)}><UserCheck className="h-4 w-4 mr-1" /> Check in</Button>
+                      <Button size="sm" onClick={() => checkInById(t)}>
+                        <UserCheck className="h-4 w-4 mr-1" /> Check in
+                      </Button>
                     )}
                   </div>
                 ))}
-                {searchResults.length === 0 && <div className="p-8 text-center text-xs text-muted-foreground">No results yet</div>}
+                {searchResults.length === 0 && (
+                  <div className="p-8 text-center text-xs text-muted-foreground">
+                    No results yet
+                  </div>
+                )}
               </div>
             </TabsContent>
           </Tabs>
@@ -324,28 +446,46 @@ function ResultPanel({ result, onClear }: { result: Result; onClear: () => void 
   if (result.kind === "not-found") {
     return (
       <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-6 min-h-[280px]">
-        <div className="flex items-center gap-2 text-destructive font-semibold"><XCircle className="h-6 w-6" /> Ticket not found</div>
-        <p className="mt-2 text-sm">No ticket matches code <span className="font-mono">{result.query}</span>. Try the Search tab to look up the attendee.</p>
-        <Button variant="outline" size="sm" className="mt-4" onClick={onClear}>Dismiss</Button>
+        <div className="flex items-center gap-2 text-destructive font-semibold">
+          <XCircle className="h-6 w-6" /> Ticket not found
+        </div>
+        <p className="mt-2 text-sm">
+          No ticket matches code <span className="font-mono">{result.query}</span>. Try the Search
+          tab to look up the attendee.
+        </p>
+        <Button variant="outline" size="sm" className="mt-4" onClick={onClear}>
+          Dismiss
+        </Button>
       </div>
     );
   }
   if (result.kind === "wrong-event") {
     return (
       <div className="rounded-2xl border border-yellow-500/40 bg-yellow-500/5 p-6 min-h-[280px]">
-        <div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400 font-semibold"><AlertCircle className="h-6 w-6" /> Wrong event</div>
-        <p className="mt-2 text-sm">This ticket is for <strong>{result.ticket.events?.title}</strong>, not the selected event.</p>
-        <Button variant="outline" size="sm" className="mt-4" onClick={onClear}>Dismiss</Button>
+        <div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400 font-semibold">
+          <AlertCircle className="h-6 w-6" /> Wrong event
+        </div>
+        <p className="mt-2 text-sm">
+          This ticket is for <strong>{result.ticket.events?.title}</strong>, not the selected event.
+        </p>
+        <Button variant="outline" size="sm" className="mt-4" onClick={onClear}>
+          Dismiss
+        </Button>
       </div>
     );
   }
   const t = result.ticket;
-  const tone = result.wasAlready ? "border-yellow-500/40 bg-yellow-500/5" : "border-success/40 bg-success/5";
+  const tone = result.wasAlready
+    ? "border-yellow-500/40 bg-yellow-500/5"
+    : "border-success/40 bg-success/5";
   const Icon = result.wasAlready ? AlertCircle : CheckCircle2;
   return (
     <div className={`rounded-2xl border p-6 ${tone} min-h-[280px]`}>
-      <div className={`flex items-center gap-2 font-semibold ${result.wasAlready ? "text-yellow-600 dark:text-yellow-400" : "text-success"}`}>
-        <Icon className="h-6 w-6" /> {result.wasAlready ? "Already checked in" : "Welcome — checked in"}
+      <div
+        className={`flex items-center gap-2 font-semibold ${result.wasAlready ? "text-yellow-600 dark:text-yellow-400" : "text-success"}`}
+      >
+        <Icon className="h-6 w-6" />{" "}
+        {result.wasAlready ? "Already checked in" : "Welcome — checked in"}
       </div>
       <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <Field label="Attendee" value={t.attendee_name || "—"} />
@@ -355,10 +495,15 @@ function ResultPanel({ result, onClear }: { result: Result; onClear: () => void 
         <Field label="Phone" value={t.attendee_phone || "—"} />
         <Field label="ID / Passport" value={t.id_number || "—"} />
         <Field label="Country" value={t.country || "—"} />
-        <Field label="Checked in at" value={t.checked_in_at ? format(new Date(t.checked_in_at), "MMM d, h:mm:ss a") : "—"} />
+        <Field
+          label="Checked in at"
+          value={t.checked_in_at ? format(new Date(t.checked_in_at), "MMM d, h:mm:ss a") : "—"}
+        />
       </div>
       {t.notes && <p className="mt-3 text-xs italic text-muted-foreground">Note: {t.notes}</p>}
-      <Button variant="outline" size="sm" className="mt-5" onClick={onClear}>Next scan</Button>
+      <Button variant="outline" size="sm" className="mt-5" onClick={onClear}>
+        Next scan
+      </Button>
     </div>
   );
 }

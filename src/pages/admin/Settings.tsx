@@ -1,8 +1,13 @@
-
 import { useTheme } from "@/hooks/useTheme";
 import { useCurrency, CURRENCIES } from "@/hooks/useCurrency";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Settings as SettingsIcon, Sun, Moon, Bell, Shield, CreditCard, Coins } from "lucide-react";
 import { toast } from "sonner";
 
@@ -17,7 +22,11 @@ function Settings() {
         <SettingsIcon className="h-6 w-6 text-primary" />
       </div>
 
-      <Row icon={theme === "light" ? Sun : Moon} title="Appearance" desc={`Currently using ${theme} mode`}>
+      <Row
+        icon={theme === "light" ? Sun : Moon}
+        title="Appearance"
+        desc={`Currently using ${theme} mode`}
+      >
         <Button variant="outline" onClick={toggle}>
           Switch to {theme === "light" ? "dark" : "light"}
         </Button>
@@ -46,15 +55,21 @@ function Settings() {
       </Row>
 
       <Row icon={Bell} title="Notifications" desc="Email and in-app alerts for new orders">
-        <Button variant="outline" disabled>Configure</Button>
+        <Button variant="outline" disabled>
+          Configure
+        </Button>
       </Row>
 
       <Row icon={Shield} title="Security" desc="Password and two-factor authentication">
-        <Button variant="outline" disabled>Manage</Button>
+        <Button variant="outline" disabled>
+          Manage
+        </Button>
       </Row>
 
       <Row icon={CreditCard} title="Payment provider" desc="Stripe is connected in sandbox mode">
-        <span className="rounded-full bg-primary/15 text-primary px-3 py-1 text-xs font-medium">Connected</span>
+        <span className="rounded-full bg-primary/15 text-primary px-3 py-1 text-xs font-medium">
+          Connected
+        </span>
       </Row>
     </div>
   );

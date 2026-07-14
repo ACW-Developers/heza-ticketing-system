@@ -40,10 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function fetchRole(uid: string) {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", uid);
+    const { data } = await supabase.from("user_roles").select("role").eq("user_id", uid);
     setIsAdmin(!!data?.some((r) => r.role === "admin"));
     setRoleResolved(true);
   }
@@ -56,7 +53,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, user: session?.user ?? null, isAdmin, loading, roleResolved, signOut }}>
+    <AuthContext.Provider
+      value={{ session, user: session?.user ?? null, isAdmin, loading, roleResolved, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

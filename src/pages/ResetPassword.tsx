@@ -56,17 +56,39 @@ function ResetPassword() {
               <Label htmlFor="pw">New password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/70" />
-                <Input id="pw" type="password" value={pw} onChange={(e) => setPw(e.target.value)} className="pl-10 h-11" required minLength={6} disabled={!ready} />
+                <Input
+                  id="pw"
+                  type="password"
+                  value={pw}
+                  onChange={(e) => setPw(e.target.value)}
+                  className="pl-10 h-11"
+                  required
+                  minLength={6}
+                  disabled={!ready}
+                />
               </div>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="pw2">Confirm new password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/70" />
-                <Input id="pw2" type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} className="pl-10 h-11" required minLength={6} disabled={!ready} />
+                <Input
+                  id="pw2"
+                  type="password"
+                  value={pw2}
+                  onChange={(e) => setPw2(e.target.value)}
+                  className="pl-10 h-11"
+                  required
+                  minLength={6}
+                  disabled={!ready}
+                />
               </div>
             </div>
-            <Button type="submit" disabled={!ready || loading} className="w-full h-12 rounded-xl border-2 border-primary/50 shadow-lg shadow-primary/20 hover:shadow-primary/40">
+            <Button
+              type="submit"
+              disabled={!ready || loading}
+              className="w-full h-12 rounded-xl border-2 border-primary/50 shadow-lg shadow-primary/20 hover:shadow-primary/40"
+            >
               {loading ? <Loader2 className="animate-spin h-4 w-4" /> : "Update password"}
             </Button>
           </form>

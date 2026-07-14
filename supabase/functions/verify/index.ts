@@ -16,7 +16,8 @@ Deno.serve(async (req) => {
     const token = auth.slice(7);
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-    const SUPABASE_ANON = Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY")!;
+    const SUPABASE_ANON =
+      Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY")!;
     const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON, {
@@ -35,7 +36,10 @@ Deno.serve(async (req) => {
     if (session.payment_status !== "paid") return json({ status: "pending" });
 
     const { data: order } = await supabase
-      .from("orders").select("*").eq("stripe_session_id", sessionId).maybeSingle();
+      .from("orders")
+      .select("*")
+      .eq("stripe_session_id", sessionId)
+      .maybeSingle();
     if (!order) return json({ error: "Order not found" }, 404);
     if (order.user_id !== userId) return json({ error: "Unauthorized" }, 403);
 
@@ -50,7 +54,11 @@ Deno.serve(async (req) => {
 
     const meta = session.metadata ?? {};
     const items = JSON.parse(meta.items ?? "[]") as Array<{ type: string; quantity: number }>;
-    const { data: event } = await admin.from("events").select("*").eq("id", order.event_id).single();
+    const { data: event } = await admin
+      .from("events")
+      .select("*")
+      .eq("id", order.event_id)
+      .single();
     if (!event) return json({ error: "Event missing" }, 404);
 
     const priceMap: Record<string, number> = {
@@ -82,7 +90,10 @@ Deno.serve(async (req) => {
       }
     }
 
-    const { data: inserted, error: tErr } = await admin.from("tickets").insert(ticketsToInsert).select();
+    const { data: inserted, error: tErr } = await admin
+      .from("tickets")
+      .insert(ticketsToInsert)
+      .select();
     if (tErr) return json({ error: "Failed to issue tickets: " + tErr.message }, 500);
 
     await admin.from("orders").update({ status: "paid" }).eq("id", order.id);

@@ -47,14 +47,19 @@ Deno.serve(async (req) => {
         email_confirm: true,
         user_metadata: { full_name: data.full_name, phone: data.phone },
       });
-      if (error || !created.user) return json({ error: error?.message ?? "Failed to create user" }, 400);
+      if (error || !created.user)
+        return json({ error: error?.message ?? "Failed to create user" }, 400);
 
       const uid = created.user.id;
-      await admin.from("profiles").upsert(
-        { user_id: uid, full_name: data.full_name, phone: data.phone, email: data.email },
-        { onConflict: "user_id" }
-      );
-      const { error: roleErr } = await admin.from("user_roles").insert({ user_id: uid, role: "admin" });
+      await admin
+        .from("profiles")
+        .upsert(
+          { user_id: uid, full_name: data.full_name, phone: data.phone, email: data.email },
+          { onConflict: "user_id" },
+        );
+      const { error: roleErr } = await admin
+        .from("user_roles")
+        .insert({ user_id: uid, role: "admin" });
       if (roleErr) return json({ error: roleErr.message }, 400);
 
       return json({ ok: true });

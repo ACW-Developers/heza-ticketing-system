@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,30 +15,46 @@ function Profile() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle().then(({ data }) => {
-      setForm({
-        full_name: data?.full_name ?? "",
-        phone: data?.phone ?? "",
-        email: data?.email ?? user.email ?? "",
+    supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        setForm({
+          full_name: data?.full_name ?? "",
+          phone: data?.phone ?? "",
+          email: data?.email ?? user.email ?? "",
+        });
+        setLoading(false);
       });
-      setLoading(false);
-    });
   }, [user]);
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
     setSaving(true);
-    const { error } = await supabase.from("profiles")
+    const { error } = await supabase
+      .from("profiles")
       .upsert({ user_id: user.id, ...form }, { onConflict: "user_id" });
     setSaving(false);
     if (error) toast.error(error.message);
     else toast.success("Profile saved");
   }
 
-  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="animate-spin text-primary" />
+      </div>
+    );
 
-  const initials = (form.full_name || form.email).split(" ").map((s) => s[0]).slice(0, 2).join("").toUpperCase();
+  const initials = (form.full_name || form.email)
+    .split(" ")
+    .map((s) => s[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -59,11 +74,20 @@ function Profile() {
         <form onSubmit={save} className="space-y-4">
           <div>
             <Label htmlFor="full_name">Full name</Label>
-            <Input id="full_name" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+            <Input
+              id="full_name"
+              value={form.full_name}
+              onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+            />
           </div>
           <div>
             <Label htmlFor="phone">Phone</Label>
-            <Input id="phone" type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <Input
+              id="phone"
+              type="tel"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            />
           </div>
           <div>
             <Label htmlFor="email">Email</Label>
