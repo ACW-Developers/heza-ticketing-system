@@ -195,7 +195,7 @@ function Dashboard() {
               <TrendingUp className="h-3 w-3" /> live
             </span>
           </div>
-          <div className="h-72 mt-3">
+          <div className="h-72 mt-3 -ml-11">
             <ResponsiveContainer>
               <AreaChart data={trend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
@@ -271,7 +271,7 @@ function Dashboard() {
         <div className="surface-card rounded-2xl p-6 lg:col-span-2">
           <h3 className="font-display text-lg font-semibold">Top events by tickets sold</h3>
           <p className="text-xs text-muted-foreground mb-3">Best performers</p>
-          <div className="h-64">
+          <div className="h-64 -ml-11">
             <ResponsiveContainer>
               <BarChart data={chart}>
                 <CartesianGrid

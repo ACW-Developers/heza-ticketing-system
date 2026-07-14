@@ -7,14 +7,24 @@ export function Layout({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">{children}</main>
-      <footer className="border-t border-border/60 mt-20">
-        <div className="container mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
+      <footer className="mt-20 border-t border-border/60">
+        <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-muted-foreground md:flex-row">
           <div>© {new Date().getFullYear()} Heza Ticketing. Built for unforgettable events.</div>
+
           <a
             href="tel:+15207361677"
-            className="inline-flex items-center gap-1.5 hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
           >
-            <Phone className="h-4 w-4" /> +1 (520) 736-1677
+            <Phone className="h-4 w-4" /> Call: +1 (520) 736-1677
+          </a>
+
+          <a
+            href="http://amosclinton.site/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-primary"
+          >
+            <span className="font-semibold text-primary">Designed by ACW</span>
           </a>
         </div>
       </footer>

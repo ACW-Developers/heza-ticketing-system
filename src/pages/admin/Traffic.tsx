@@ -241,7 +241,7 @@ function Traffic() {
           <h3 className="font-display text-lg font-semibold">Daily traffic</h3>
           <span className="text-xs text-muted-foreground">Visits & unique visitors</span>
         </div>
-        <div className="h-80">
+        <div className="h-80 -ml-11">
           <ResponsiveContainer>
             <AreaChart data={trend} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
               <defs>
@@ -319,7 +319,7 @@ function Traffic() {
         <div className="surface-card rounded-2xl p-5">
           <h3 className="font-display text-base font-semibold mb-1">Visits by hour</h3>
           <p className="text-xs text-muted-foreground mb-3">When your audience is most active</p>
-          <div className="h-60">
+          <div className="h-60 -ml-11">
             <ResponsiveContainer>
               <LineChart data={hourly}>
                 <CartesianGrid
@@ -359,7 +359,7 @@ function Traffic() {
         <div className="surface-card rounded-2xl p-5">
           <h3 className="font-display text-base font-semibold mb-1">Visits by weekday</h3>
           <p className="text-xs text-muted-foreground mb-3">Patterns across the week</p>
-          <div className="h-60">
+          <div className="h-60 -ml-11">
             <ResponsiveContainer>
               <BarChart data={weekday}>
                 <CartesianGrid
@@ -425,7 +425,7 @@ function DonutCard({ title, data }: { title: string; data: any[] }) {
       {data.length === 0 ? (
         <p className="text-xs text-muted-foreground py-10 text-center">No data yet</p>
       ) : (
-        <div className="h-56">
+        <div className="h-56 -ml-11">
           <ResponsiveContainer>
             <PieChart>
               <Pie

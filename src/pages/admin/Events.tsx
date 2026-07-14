@@ -406,7 +406,7 @@ function AdminEvents() {
             </div>
             <div className="surface-card rounded-2xl p-5">
               <h3 className="font-display text-base font-semibold mb-3">Top events by revenue</h3>
-              <div className="h-56">
+              <div className="h-56 -ml-11">
                 <ResponsiveContainer>
                   <BarChart data={overview.topRevenue}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />

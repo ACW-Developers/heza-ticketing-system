@@ -66,7 +66,7 @@ function Settings() {
         </Button>
       </Row>
 
-      <Row icon={CreditCard} title="Payment provider" desc="Stripe is connected in sandbox mode">
+      <Row icon={CreditCard} title="Payment provider" desc="Paystack is connected in Live mode">
         <span className="rounded-full bg-primary/15 text-primary px-3 py-1 text-xs font-medium">
           Connected
         </span>
