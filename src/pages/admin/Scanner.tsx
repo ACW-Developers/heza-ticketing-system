@@ -254,11 +254,12 @@ function Scanner() {
             </TabsContent>
 
             <TabsContent value="camera" className="pt-4 space-y-3">
-              <div
-                id="qr-camera"
-                className="qr-camera-surface w-full rounded-xl overflow-hidden bg-black relative"
-                style={{ minHeight: 260 }}
-              >
+              <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ minHeight: 260 }}>
+                <div
+                  id="qr-camera"
+                  className="qr-camera-surface w-full"
+                  style={{ minHeight: 260 }}
+                />
                 {!scannerActive && (
                   <div className="absolute inset-0 flex items-center justify-center text-white/60 text-xs pointer-events-none">
                     Camera preview will appear here
