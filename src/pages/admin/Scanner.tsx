@@ -75,23 +75,33 @@ function Scanner() {
       await stopCamera();
       const el = document.getElementById("qr-camera");
       if (!el) { toast.error("Camera surface not ready"); return; }
+      if (!navigator.mediaDevices?.getUserMedia) {
+        toast.error("Camera not supported on this browser");
+        return;
+      }
       const sc = new Html5Qrcode("qr-camera", { verbose: false } as any);
       scannerRef.current = sc;
-      const config = { fps: 12, qrbox: { width: 260, height: 260 }, aspectRatio: 1.3333 };
+      const config = { fps: 12, qrbox: { width: 240, height: 240 } };
+      const onDecode = (t: string) => handleScan(t);
+      const onErr = () => {};
       try {
-        await sc.start({ facingMode: { exact: "environment" } } as any, config, (t) => handleScan(t), () => {});
+        // Prefer rear camera without hard `exact` so laptops with only a
+        // front-facing camera still start successfully.
+        await sc.start({ facingMode: "environment" } as any, config, onDecode, onErr);
       } catch {
-        // Fallback: pick from available cameras
         const cams = await Html5Qrcode.getCameras();
         if (!cams?.length) throw new Error("No camera devices found");
         const back = cams.find((c) => /back|rear|environment/i.test(c.label)) ?? cams[cams.length - 1];
-        await sc.start(back.id, config, (t) => handleScan(t), () => {});
+        await sc.start(back.id, config, onDecode, onErr);
       }
       setScannerActive(true);
+      toast.success("Camera started");
     } catch (e: any) {
       setScannerActive(false);
       scannerRef.current = null;
-      toast.error("Camera unavailable: " + (e?.message ?? "permission denied. Allow camera access in your browser."));
+      const msg = e?.message || String(e);
+      toast.error("Camera unavailable: " + msg + ". Check browser permissions.");
+      console.error("Scanner start failed", e);
     }
   }
   async function stopCamera() {
@@ -244,8 +254,16 @@ function Scanner() {
             </TabsContent>
 
             <TabsContent value="camera" className="pt-4 space-y-3">
-              <div id="qr-camera" className="w-full rounded-xl overflow-hidden bg-black min-h-[260px] flex items-center justify-center text-white/60 text-xs">
-                {!scannerActive && "Camera preview will appear here"}
+              <div
+                id="qr-camera"
+                className="qr-camera-surface w-full rounded-xl overflow-hidden bg-black relative"
+                style={{ minHeight: 260 }}
+              >
+                {!scannerActive && (
+                  <div className="absolute inset-0 flex items-center justify-center text-white/60 text-xs pointer-events-none">
+                    Camera preview will appear here
+                  </div>
+                )}
               </div>
               <div className="flex gap-2">
                 {!scannerActive ? (
