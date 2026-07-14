@@ -244,8 +244,16 @@ function Scanner() {
             </TabsContent>
 
             <TabsContent value="camera" className="pt-4 space-y-3">
-              <div id="qr-camera" className="w-full rounded-xl overflow-hidden bg-black min-h-[260px] flex items-center justify-center text-white/60 text-xs">
-                {!scannerActive && "Camera preview will appear here"}
+              <div
+                id="qr-camera"
+                className="qr-camera-surface w-full rounded-xl overflow-hidden bg-black relative"
+                style={{ minHeight: 260 }}
+              >
+                {!scannerActive && (
+                  <div className="absolute inset-0 flex items-center justify-center text-white/60 text-xs pointer-events-none">
+                    Camera preview will appear here
+                  </div>
+                )}
               </div>
               <div className="flex gap-2">
                 {!scannerActive ? (
