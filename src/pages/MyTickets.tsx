@@ -88,47 +88,47 @@ function MyTickets() {
               <div key={t.id} className="space-y-2">
                 <div
                   ref={(el) => { ticketRefs.current[t.id] = el; }}
-                  className="relative flex rounded-2xl overflow-hidden shadow-xl bg-white text-neutral-900"
+                  className="ticket-card relative flex flex-col xs:flex-row rounded-2xl overflow-hidden shadow-xl bg-white text-neutral-900 w-full"
                   style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
                 >
                   {/* Left accent bar */}
-                  <div className="w-2 bg-gradient-to-b from-primary via-accent to-primary" />
+                  <div className="h-2 w-full xs:h-auto xs:w-2 bg-gradient-to-r xs:bg-gradient-to-b from-primary via-accent to-primary" />
 
                   {/* Main body */}
-                  <div className="flex-1 p-6">
-                    <div className="flex items-center justify-between">
+                  <div className="flex-1 p-5 sm:p-6 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-neutral-500 font-semibold">
                         <TicketIcon className="h-3.5 w-3.5" />
                         Admit One
                       </div>
-                      <span className="rounded-full bg-neutral-900 text-white px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-bold">
+                      <span className="rounded-full bg-neutral-900 text-white px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-bold whitespace-nowrap">
                         {t.ticket_type}
                       </span>
                     </div>
 
-                    <h3 className="font-display text-2xl font-extrabold mt-3 leading-tight text-neutral-900">
+                    <h3 className="font-display text-xl sm:text-2xl font-extrabold mt-3 leading-tight text-neutral-900 break-words">
                       {t.events?.title}
                     </h3>
 
                     <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
-                      <div>
+                      <div className="min-w-0">
                         <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Date</div>
                         <div className="mt-1 flex items-center gap-1.5 text-neutral-800 font-medium">
-                          <Calendar className="h-3.5 w-3.5 text-neutral-500" />
-                          {t.events?.event_date && format(new Date(t.events.event_date), "MMM d, yyyy · h:mm a")}
+                          <Calendar className="h-3.5 w-3.5 text-neutral-500 shrink-0" />
+                          <span className="truncate">{t.events?.event_date && format(new Date(t.events.event_date), "MMM d, yyyy · h:mm a")}</span>
                         </div>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Venue</div>
                         <div className="mt-1 flex items-center gap-1.5 text-neutral-800 font-medium">
-                          <MapPin className="h-3.5 w-3.5 text-neutral-500" />
-                          {t.events?.venue}
+                          <MapPin className="h-3.5 w-3.5 text-neutral-500 shrink-0" />
+                          <span className="truncate">{t.events?.venue}</span>
                         </div>
                       </div>
                       {t.attendee_name && (
-                        <div className="col-span-2">
+                        <div className="col-span-2 min-w-0">
                           <div className="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Attendee</div>
-                          <div className="mt-1 text-neutral-800 font-medium">{t.attendee_name}</div>
+                          <div className="mt-1 text-neutral-800 font-medium truncate">{t.attendee_name}</div>
                         </div>
                       )}
                     </div>
@@ -140,15 +140,15 @@ function MyTickets() {
                   </div>
 
                   {/* Perforated divider */}
-                  <div className="relative flex flex-col items-center justify-center px-1">
+                  <div className="relative hidden xs:flex flex-col items-center justify-center px-1">
                     <div className="absolute -top-2 h-4 w-4 rounded-full bg-background" />
                     <div className="h-full w-px border-l border-dashed border-neutral-300" />
                     <div className="absolute -bottom-2 h-4 w-4 rounded-full bg-background" />
                   </div>
 
                   {/* QR stub */}
-                  <div className="w-36 bg-neutral-50 p-3 flex flex-col items-center justify-center">
-                    {qrs[t.id] && <img src={qrs[t.id]} alt="QR" className="w-full" />}
+                  <div className="w-full xs:w-36 shrink-0 bg-neutral-50 p-3 flex flex-col items-center justify-center border-t xs:border-t-0 border-dashed border-neutral-200">
+                    {qrs[t.id] && <img src={qrs[t.id]} alt="QR" className="w-32 xs:w-full" />}
                     <span className="mt-1.5 text-[9px] uppercase tracking-[0.15em] text-neutral-500 font-semibold">Scan at entry</span>
                   </div>
                 </div>
