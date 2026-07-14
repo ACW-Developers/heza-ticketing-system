@@ -42,11 +42,21 @@ function MyTickets() {
   async function downloadTicket(t: any) {
     const el = ticketRefs.current[t.id];
     if (!el) return;
+    // Force a fixed desktop layout during capture so downloads look
+    // identical regardless of the device the user is on.
+    const prevWidth = el.style.width;
+    const prevMinWidth = el.style.minWidth;
+    el.style.width = "640px";
+    el.style.minWidth = "640px";
+    el.classList.add("ticket-capture");
     try {
       const dataUrl = await toPng(el, {
         backgroundColor: "#ffffff",
         pixelRatio: 2,
         cacheBust: true,
+        width: 640,
+        height: el.offsetHeight,
+        style: { width: "640px", minWidth: "640px" },
       });
       const link = document.createElement("a");
       link.download = `ticket-${t.ticket_number}.png`;
@@ -54,6 +64,10 @@ function MyTickets() {
       link.click();
     } catch (err) {
       console.error("Ticket download failed", err);
+    } finally {
+      el.style.width = prevWidth;
+      el.style.minWidth = prevMinWidth;
+      el.classList.remove("ticket-capture");
     }
   }
 
