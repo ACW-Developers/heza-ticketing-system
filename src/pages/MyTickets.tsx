@@ -88,11 +88,11 @@ function MyTickets() {
               <div key={t.id} className="space-y-2">
                 <div
                   ref={(el) => { ticketRefs.current[t.id] = el; }}
-                  className="ticket-card relative flex flex-col xs:flex-row rounded-2xl overflow-hidden shadow-xl bg-white text-neutral-900 w-full"
+                  className="ticket-card relative flex flex-col min-[420px]:flex-row rounded-2xl overflow-hidden shadow-xl bg-white text-neutral-900 w-full"
                   style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
                 >
                   {/* Left accent bar */}
-                  <div className="h-2 w-full xs:h-auto xs:w-2 bg-gradient-to-r xs:bg-gradient-to-b from-primary via-accent to-primary" />
+                  <div className="h-2 w-full min-[420px]:h-auto min-[420px]:w-2 bg-gradient-to-r min-[420px]:bg-gradient-to-b from-primary via-accent to-primary" />
 
                   {/* Main body */}
                   <div className="flex-1 p-5 sm:p-6 min-w-0">
@@ -140,15 +140,15 @@ function MyTickets() {
                   </div>
 
                   {/* Perforated divider */}
-                  <div className="relative hidden xs:flex flex-col items-center justify-center px-1">
+                  <div className="relative hidden min-[420px]:flex flex-col items-center justify-center px-1">
                     <div className="absolute -top-2 h-4 w-4 rounded-full bg-background" />
                     <div className="h-full w-px border-l border-dashed border-neutral-300" />
                     <div className="absolute -bottom-2 h-4 w-4 rounded-full bg-background" />
                   </div>
 
                   {/* QR stub */}
-                  <div className="w-full xs:w-36 shrink-0 bg-neutral-50 p-3 flex flex-col items-center justify-center border-t xs:border-t-0 border-dashed border-neutral-200">
-                    {qrs[t.id] && <img src={qrs[t.id]} alt="QR" className="w-32 xs:w-full" />}
+                  <div className="w-full min-[420px]:w-36 shrink-0 bg-neutral-50 p-3 flex flex-col items-center justify-center border-t min-[420px]:border-t-0 border-dashed border-neutral-200">
+                    {qrs[t.id] && <img src={qrs[t.id]} alt="QR" className="w-32 min-[420px]:w-full" />}
                     <span className="mt-1.5 text-[9px] uppercase tracking-[0.15em] text-neutral-500 font-semibold">Scan at entry</span>
                   </div>
                 </div>
