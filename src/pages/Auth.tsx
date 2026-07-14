@@ -169,18 +169,13 @@ function Auth() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-transparent to-accent/20 mix-blend-multiply" />
         {/* Darken only the lower portion so bottom text stays readable */}
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/75 via-black/40 to-transparent" />
-        <div className="relative h-full flex flex-col justify-between p-12 text-white">
-          <div className="flex items-center gap-2.5">
-            <div className="h-10 w-10 rounded-xl bg-white/90 backdrop-blur ring-1 ring-white/40 flex items-center justify-center shadow-lg">
-              <img src={logo} alt="" className="h-8 w-8 rounded-md" />
-            </div>
-            <span className="font-display text-xl font-bold drop-shadow-lg">Heza Ticketing</span>
-          </div>
-          <div className="space-y-4 max-w-2xl">
+        <div className="relative flex h-full flex-col justify-end p-12 text-white">
+          <div className="max-w-2xl space-y-4">
             <h2 className="font-display text-4xl xl:text-5xl font-bold leading-[1.05] drop-shadow-2xl">
               Your next unforgettable event is one tap away.
             </h2>
-            <p className="text-white/95 text-base leading-relaxed drop-shadow-lg">
+
+            <p className="text-base leading-relaxed text-white/95 drop-shadow-lg">
               Discover events, book in seconds with secure checkout, and walk in with instant QR
               tickets.
             </p>
