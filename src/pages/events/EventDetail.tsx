@@ -202,7 +202,10 @@ function EventDetail() {
               <Button className="w-full mt-4 glow-primary h-11" disabled={submitting || totalQty === 0} onClick={startCheckout}>
                 {user ? "Continue to checkout" : "Sign in to checkout"}
               </Button>
-              <p className="text-xs text-muted-foreground text-center mt-3">Secure payment by Stripe</p>
+              <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-2.5 text-center">
+                <p className="text-xs font-semibold text-foreground">Pay with M-Pesa</p>
+                <p className="text-[10px] text-muted-foreground">Secure checkout powered by Paystack · Cards & Mobile Money</p>
+              </div>
             </div>
           </aside>
         </div>
