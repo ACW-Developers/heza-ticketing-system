@@ -1,0 +1,24 @@
+
+CREATE POLICY "Users upload own avatar"
+ON storage.objects FOR INSERT TO authenticated
+WITH CHECK (
+  bucket_id = 'event-posters'
+  AND (storage.foldername(name))[1] = 'avatars'
+  AND (storage.foldername(name))[2] = auth.uid()::text
+);
+
+CREATE POLICY "Users update own avatar"
+ON storage.objects FOR UPDATE TO authenticated
+USING (
+  bucket_id = 'event-posters'
+  AND (storage.foldername(name))[1] = 'avatars'
+  AND (storage.foldername(name))[2] = auth.uid()::text
+);
+
+CREATE POLICY "Users delete own avatar"
+ON storage.objects FOR DELETE TO authenticated
+USING (
+  bucket_id = 'event-posters'
+  AND (storage.foldername(name))[1] = 'avatars'
+  AND (storage.foldername(name))[2] = auth.uid()::text
+);
