@@ -428,13 +428,17 @@ function EventGallery({
   }, [cover, urls.join("|")]);
   if (all.length === 0) {
     return (
-      <div className="aspect-[16/9] surface-card rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary/20 to-accent/10" />
+      <div className="h-[420px] sm:h-auto sm:aspect-[16/9] surface-card rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary/20 to-accent/10" />
     );
   }
   return (
     <div className="mb-6">
-      <div className="aspect-[16/9] surface-card rounded-2xl overflow-hidden">
-        <img src={active} alt={title} className="h-full w-full object-cover" />
+      <div className="h-[420px] sm:h-auto sm:aspect-[16/9] surface-card rounded-2xl overflow-hidden bg-muted/40 flex items-center justify-center">
+        <img
+          src={active}
+          alt={title}
+          className="h-full w-full object-contain sm:object-cover"
+        />
       </div>
       {all.length > 1 && (
         <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
