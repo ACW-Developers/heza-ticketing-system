@@ -275,7 +275,7 @@ function AdminEvents() {
                           key={url}
                           className="relative group rounded-lg overflow-hidden border border-border"
                         >
-                          <img src={url} alt="event" className="h-20 w-full object-cover" />
+                          <img src={url} alt="event" className="h-24 w-full object-cover" />
                           {isCover && (
                             <span className="absolute top-1 left-1 text-[9px] font-semibold uppercase bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
                               Cover
