@@ -112,10 +112,14 @@ function AdminEvents() {
     setOpen(true);
   }
   function startEdit(e: any) {
+    const existing = Array.isArray(e.poster_urls) ? e.poster_urls.filter(Boolean) : [];
+    const merged =
+      existing.length === 0 && e.poster_url ? [e.poster_url] : existing;
     setForm({
       ...e,
       event_date: format(new Date(e.event_date), "yyyy-MM-dd'T'HH:mm"),
-      poster_urls: Array.isArray(e.poster_urls) ? e.poster_urls : [],
+      poster_urls: merged,
+      poster_url: e.poster_url || merged[0] || "",
     });
     setOpen(true);
   }
@@ -271,18 +275,18 @@ function AdminEvents() {
                           key={url}
                           className="relative group rounded-lg overflow-hidden border border-border"
                         >
-                          <img src={url} alt="event" className="h-20 w-full object-cover" />
+                          <img src={url} alt="event" className="h-24 w-full object-cover" />
                           {isCover && (
                             <span className="absolute top-1 left-1 text-[9px] font-semibold uppercase bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
                               Cover
                             </span>
                           )}
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-1.5">
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1.5 flex items-center justify-center gap-1.5">
                             {!isCover && (
                               <button
                                 type="button"
                                 onClick={() => makeCover(url)}
-                                className="text-[10px] bg-white/90 text-black rounded px-1.5 py-0.5"
+                                className="text-[10px] bg-white/95 text-black rounded px-1.5 py-0.5 font-medium hover:bg-white"
                               >
                                 Set cover
                               </button>
@@ -290,7 +294,7 @@ function AdminEvents() {
                             <button
                               type="button"
                               onClick={() => removeImage(url)}
-                              className="text-[10px] bg-destructive text-destructive-foreground rounded px-1.5 py-0.5"
+                              className="text-[10px] bg-destructive text-destructive-foreground rounded px-1.5 py-0.5 font-medium hover:opacity-90"
                             >
                               Remove
                             </button>

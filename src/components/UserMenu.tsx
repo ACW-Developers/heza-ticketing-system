@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
+import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +28,26 @@ export function UserMenu() {
   const { user, isAdmin, signOut } = useAuth();
   const { theme, toggle } = useTheme();
   const nav = useNavigate();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) {
+      setAvatarUrl(null);
+      return;
+    }
+    const load = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setAvatarUrl((data as any)?.avatar_url ?? null);
+    };
+    load();
+    const handler = () => load();
+    window.addEventListener("profile-updated", handler);
+    return () => window.removeEventListener("profile-updated", handler);
+  }, [user]);
 
   if (!user) {
     return (
@@ -52,8 +74,12 @@ export function UserMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="gap-2 pr-2 pl-1.5 border-2 border-primary/50 h-9">
-            <div className="flex h-7 w-7 items-center border-2 justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-              {initials}
+            <div className="flex h-7 w-7 items-center border-2 border-primary-foreground/40 justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold overflow-hidden">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+              ) : (
+                initials
+              )}
             </div>
             <span className="hidden sm:inline text-sm font-medium max-w-[140px] truncate">
               {user.user_metadata?.full_name ?? user.email?.split("@")[0]}
