@@ -74,8 +74,12 @@ export function UserMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="gap-2 pr-2 pl-1.5 border-2 border-primary/50 h-9">
-            <div className="flex h-7 w-7 items-center border-2 justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-              {initials}
+            <div className="flex h-7 w-7 items-center border-2 border-primary-foreground/40 justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold overflow-hidden">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+              ) : (
+                initials
+              )}
             </div>
             <span className="hidden sm:inline text-sm font-medium max-w-[140px] truncate">
               {user.user_metadata?.full_name ?? user.email?.split("@")[0]}
