@@ -112,10 +112,14 @@ function AdminEvents() {
     setOpen(true);
   }
   function startEdit(e: any) {
+    const existing = Array.isArray(e.poster_urls) ? e.poster_urls.filter(Boolean) : [];
+    const merged =
+      existing.length === 0 && e.poster_url ? [e.poster_url] : existing;
     setForm({
       ...e,
       event_date: format(new Date(e.event_date), "yyyy-MM-dd'T'HH:mm"),
-      poster_urls: Array.isArray(e.poster_urls) ? e.poster_urls : [],
+      poster_urls: merged,
+      poster_url: e.poster_url || merged[0] || "",
     });
     setOpen(true);
   }
