@@ -20,12 +20,12 @@ export function EventCard({ event }: { event: EventCardData }) {
       to={`/events/${event.id}`}
       className="group surface-card rounded-2xl overflow-hidden hover:border-primary/40 hover:-translate-y-0.5 transition-all"
     >
-      <div className="aspect-[16/10] bg-muted relative overflow-hidden">
+      <div className="aspect-[9/10] bg-muted relative overflow-hidden">
         {event.poster_url ? (
           <img
             src={event.poster_url}
             alt={event.title}
-            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-primary/20 via-accent/10 to-transparent flex items-center justify-center">
