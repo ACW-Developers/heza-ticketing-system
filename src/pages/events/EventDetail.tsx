@@ -287,15 +287,15 @@ function EventDetail() {
 
               <Button
                 className="w-full mt-4 glow-primary h-11"
-                disabled={submitting || totalQty === 0}
+                disabled={true}
                 onClick={startCheckout}
               >
-                {user ? "Continue to checkout" : "Sign in to checkout"}
+                Checkout temporarily unavailable
               </Button>
-              <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-2.5 text-center">
-                <p className="text-xs font-semibold text-foreground">Pay with M-Pesa</p>
+              <div className="mt-3 rounded-lg border border-destructive/30 bg-destructive/5 p-2.5 text-center">
+                <p className="text-xs font-semibold text-foreground">Payment gateway downtime</p>
                 <p className="text-[10px] text-muted-foreground">
-                  Secure checkout powered by Paystack · Cards & Mobile Money
+                  We apologize for the delay — ticket purchases are paused while we restore our payment provider. Please check back soon.
                 </p>
               </div>
             </div>
@@ -402,8 +402,8 @@ function EventDetail() {
             <Button variant="outline" onClick={() => setContactOpen(false)} disabled={submitting}>
               Cancel
             </Button>
-            <Button onClick={confirmCheckout} disabled={submitting} className="glow-primary">
-              {submitting ? <Loader2 className="animate-spin h-4 w-4" /> : `Pay ${fmt(total)}`}
+            <Button onClick={confirmCheckout} disabled={true} className="glow-primary">
+              Checkout unavailable
             </Button>
           </DialogFooter>
         </DialogContent>
