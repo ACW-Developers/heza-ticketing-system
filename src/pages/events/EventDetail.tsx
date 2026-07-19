@@ -155,8 +155,6 @@ function EventDetail() {
     if (!contact.name.trim() || !contact.email.trim() || !contact.phone.trim()) {
       return toast.error("Please fill in your name, email and phone");
     }
-    if (!contact.id_number.trim()) return toast.error("National ID or passport number is required");
-    if (!contact.country.trim()) return toast.error("Please enter your country");
     if (!contact.agree) return toast.error("Please accept the terms to continue");
     setSubmitting(true);
     const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({
@@ -341,20 +339,21 @@ function EventDetail() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="c-id">National ID / Passport *</Label>
+                <Label htmlFor="c-id">National ID / Passport</Label>
                 <Input
                   id="c-id"
+                  placeholder="e.g. 12345678"
                   value={contact.id_number}
                   onChange={(e) => setContact({ ...contact, id_number: e.target.value })}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="c-country">Country *</Label>
+                <Label htmlFor="c-country">Country</Label>
                 <Input
                   id="c-country"
                   value={contact.country}
                   onChange={(e) => setContact({ ...contact, country: e.target.value })}
-                  placeholder="e.g. Rwanda"
+                  placeholder="e.g. Kenya"
                 />
               </div>
             </div>

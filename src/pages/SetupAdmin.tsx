@@ -83,10 +83,6 @@ function SetupAdmin() {
             </p>
           </div>
 
-          <div className="mb-5 rounded-lg border border-primary/30 bg-primary/5 p-3 text-xs text-muted-foreground">
-            Suggested defaults have been filled in. Review and change anything before creating the
-            admin.
-          </div>
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
               <Label htmlFor="full_name">Full name</Label>
@@ -95,7 +91,7 @@ function SetupAdmin() {
                 name="full_name"
                 required
                 maxLength={100}
-                defaultValue="Hezat Admin"
+                placeholder="e.g. Jane Doe"
               />
             </div>
             <div>
@@ -106,7 +102,7 @@ function SetupAdmin() {
                 type="tel"
                 required
                 maxLength={20}
-                defaultValue="+250000000000"
+                placeholder="+254 700 000 000"
               />
             </div>
             <div>
@@ -116,7 +112,7 @@ function SetupAdmin() {
                 name="email"
                 type="email"
                 required
-                defaultValue="admin@hezaticketing.com"
+                placeholder="admin@yourdomain.com"
               />
             </div>
             <div>
@@ -128,7 +124,7 @@ function SetupAdmin() {
                 required
                 minLength={8}
                 maxLength={72}
-                defaultValue="0206White"
+                placeholder="At least 8 characters"
               />
             </div>
             <Button type="submit" className="w-full glow-primary" disabled={submitting}>
