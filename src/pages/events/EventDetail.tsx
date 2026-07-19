@@ -339,20 +339,21 @@ function EventDetail() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="c-id">National ID / Passport *</Label>
+                <Label htmlFor="c-id">National ID / Passport</Label>
                 <Input
                   id="c-id"
+                  placeholder="e.g. 12345678"
                   value={contact.id_number}
                   onChange={(e) => setContact({ ...contact, id_number: e.target.value })}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="c-country">Country *</Label>
+                <Label htmlFor="c-country">Country</Label>
                 <Input
                   id="c-country"
                   value={contact.country}
                   onChange={(e) => setContact({ ...contact, country: e.target.value })}
-                  placeholder="e.g. Rwanda"
+                  placeholder="e.g. Kenya"
                 />
               </div>
             </div>
