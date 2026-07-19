@@ -159,21 +159,19 @@ function EventDetail() {
     if (!contact.country.trim()) return toast.error("Please enter your country");
     if (!contact.agree) return toast.error("Please accept the terms to continue");
     setSubmitting(true);
-    try {
-      const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({
-        type: t.key,
-        quantity: qty[t.key],
-      }));
-      const { data, error } = await supabase.functions.invoke("paystack-init", {
-        body: { eventId: id, origin: window.location.origin, items, attendee: contact },
-      });
-      if (error) throw new Error(error.message || "Checkout failed");
-      if (data?.error) throw new Error(data.error);
-      if (data?.url) window.location.href = data.url;
-    } catch (e: any) {
-      toast.error(e?.message ?? "Checkout failed");
-      setSubmitting(false);
-    }
+    const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({
+      type: t.key,
+      quantity: qty[t.key],
+    }));
+    nav("/checkout/mpesa", {
+      state: {
+        eventId: id,
+        eventTitle: event?.title,
+        items,
+        attendee: contact,
+        total,
+      },
+    });
   }
 
   if (loading)
@@ -287,15 +285,16 @@ function EventDetail() {
 
               <Button
                 className="w-full mt-4 glow-primary h-11"
-                disabled={true}
+                disabled={totalQty === 0}
                 onClick={startCheckout}
               >
-                Checkout temporarily unavailable
+                Checkout · Pay with M-Pesa
               </Button>
-              <div className="mt-3 rounded-lg border border-destructive/30 bg-destructive/5 p-2.5 text-center">
-                <p className="text-xs font-semibold text-foreground">Payment gateway downtime</p>
+              <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-2.5 text-center">
+                <p className="text-xs font-semibold text-foreground">Manual M-Pesa payment</p>
                 <p className="text-[10px] text-muted-foreground">
-                  We apologize for the delay — ticket purchases are paused while we restore our payment provider. Please check back soon.
+                  Send to <span className="font-mono">0702370395</span> (Omariba Jacinta). Enter your
+                  transaction code on the next screen — tickets activate once confirmed.
                 </p>
               </div>
             </div>
@@ -402,8 +401,8 @@ function EventDetail() {
             <Button variant="outline" onClick={() => setContactOpen(false)} disabled={submitting}>
               Cancel
             </Button>
-            <Button onClick={confirmCheckout} disabled={true} className="glow-primary">
-              Checkout unavailable
+            <Button onClick={confirmCheckout} disabled={submitting} className="glow-primary">
+              {submitting ? "Please wait…" : "Continue to payment"}
             </Button>
           </DialogFooter>
         </DialogContent>

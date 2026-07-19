@@ -12,6 +12,7 @@ import SetupAdmin from "@/pages/SetupAdmin";
 import EventsIndex from "@/pages/events/EventsIndex";
 import EventDetail from "@/pages/events/EventDetail";
 import CheckoutSuccess from "@/pages/checkout/Success";
+import ManualPayment from "@/pages/checkout/ManualPayment";
 import AdminLayout from "@/pages/admin/AdminLayout";
 import Dashboard from "@/pages/admin/Dashboard";
 import AdminEvents from "@/pages/admin/Events";
@@ -60,6 +61,7 @@ export default function App() {
                 <Route path="/events" element={<EventsIndex />} />
                 <Route path="/events/:id" element={<EventDetail />} />
                 <Route path="/checkout/success" element={<CheckoutSuccess />} />
+                <Route path="/checkout/mpesa" element={<ManualPayment />} />
                 <Route path="/my-tickets" element={<MyTickets />} />
                 <Route path="/setup-admin" element={<SetupAdmin />} />
                 <Route path="/admin" element={<AdminLayout />}>
