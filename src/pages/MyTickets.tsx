@@ -121,6 +121,21 @@ function MyTickets() {
                         {t.ticket_type}
                       </span>
                     </div>
+                    {t.payment_status && t.payment_status !== "confirmed" && (
+                      <div className="mt-2">
+                        <span
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                            t.payment_status === "rejected"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {t.payment_status === "rejected"
+                            ? "Payment rejected"
+                            : "Payment pending confirmation"}
+                        </span>
+                      </div>
+                    )}
 
                     <h3 className="font-display text-xl sm:text-2xl font-extrabold mt-3 leading-tight text-neutral-900 break-words">
                       {t.events?.title}
