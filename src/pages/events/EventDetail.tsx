@@ -155,8 +155,6 @@ function EventDetail() {
     if (!contact.name.trim() || !contact.email.trim() || !contact.phone.trim()) {
       return toast.error("Please fill in your name, email and phone");
     }
-    if (!contact.id_number.trim()) return toast.error("National ID or passport number is required");
-    if (!contact.country.trim()) return toast.error("Please enter your country");
     if (!contact.agree) return toast.error("Please accept the terms to continue");
     setSubmitting(true);
     const items = TYPES.filter((t) => qty[t.key] > 0).map((t) => ({
