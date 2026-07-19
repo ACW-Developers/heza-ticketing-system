@@ -151,10 +151,16 @@ export type Database = {
       }
       orders: {
         Row: {
+          admin_note: string | null
+          approved_at: string | null
+          approved_by: string | null
           created_at: string
           currency: string
           event_id: string
           id: string
+          mpesa_code: string | null
+          mpesa_phone: string | null
+          payment_method: string
           status: Database["public"]["Enums"]["order_status"]
           stripe_session_id: string | null
           total_amount: number
@@ -162,10 +168,16 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          admin_note?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           currency?: string
           event_id: string
           id?: string
+          mpesa_code?: string | null
+          mpesa_phone?: string | null
+          payment_method?: string
           status?: Database["public"]["Enums"]["order_status"]
           stripe_session_id?: string | null
           total_amount: number
@@ -173,10 +185,16 @@ export type Database = {
           user_id: string
         }
         Update: {
+          admin_note?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           currency?: string
           event_id?: string
           id?: string
+          mpesa_code?: string | null
+          mpesa_phone?: string | null
+          payment_method?: string
           status?: Database["public"]["Enums"]["order_status"]
           stripe_session_id?: string | null
           total_amount?: number
@@ -292,8 +310,10 @@ export type Database = {
           gender: string | null
           id: string
           id_number: string | null
+          mpesa_code: string | null
           notes: string | null
           order_id: string
+          payment_status: string
           price: number
           ticket_number: string
           ticket_type: Database["public"]["Enums"]["ticket_type"]
@@ -311,8 +331,10 @@ export type Database = {
           gender?: string | null
           id?: string
           id_number?: string | null
+          mpesa_code?: string | null
           notes?: string | null
           order_id: string
+          payment_status?: string
           price: number
           ticket_number: string
           ticket_type: Database["public"]["Enums"]["ticket_type"]
@@ -330,8 +352,10 @@ export type Database = {
           gender?: string | null
           id?: string
           id_number?: string | null
+          mpesa_code?: string | null
           notes?: string | null
           order_id?: string
+          payment_status?: string
           price?: number
           ticket_number?: string
           ticket_type?: Database["public"]["Enums"]["ticket_type"]
